@@ -1,7 +1,7 @@
 package com.krizan.social_media.controller.request;
 
-public record LoginRequest(
+public record RefreshTokenRequest(
     String username,
-    String password
+    String refreshToken
 ) {
 }
