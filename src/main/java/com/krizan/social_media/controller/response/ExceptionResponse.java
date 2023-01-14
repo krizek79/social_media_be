@@ -1,16 +1,11 @@
 package com.krizan.social_media.controller.response;
 
 import java.time.LocalDateTime;
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class ExceptionResponse {
-
-    private LocalDateTime timestamp;
-    private String message;
-
-    public ExceptionResponse(Throwable ex) {
-        this.timestamp = LocalDateTime.now();
-        this.message = ex.getMessage();
-    }
+@Builder
+public record ExceptionResponse(
+    LocalDateTime timestamp,
+    String message
+) {
 }

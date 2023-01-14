@@ -21,7 +21,7 @@ public class JwtProvider {
     private final AppUserService appUserService;
     @Getter
     @Value("${security.jwtExpirationTimeInMillis}")
-    private final Long jwtExpirationTimeInMillis;
+    private Long jwtExpirationTimeInMillis;
 
     public String generateTokenByAuthentication(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();

@@ -5,6 +5,7 @@ import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.controller.response.PostResponse;
 import com.krizan.social_media.service.api.PostService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/posts")
-public record PostController(PostService postService) {
+@RequiredArgsConstructor
+public class PostController {
+
+    private final PostService postService;
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")

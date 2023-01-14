@@ -5,6 +5,7 @@ import com.krizan.social_media.controller.request.RefreshTokenRequest;
 import com.krizan.social_media.controller.request.RegistrationRequest;
 import com.krizan.social_media.controller.response.AuthResponse;
 import com.krizan.social_media.service.api.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public record AuthController(AuthService authService) {
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
 
     @PostMapping("/register")
     public String register(@RequestBody RegistrationRequest request) {
