@@ -60,6 +60,14 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public String getAppUserUsernameByEmail(String email) {
+        AppUser appUser = appUserRepository.findAppUserByEmail(email).orElseThrow(
+            () -> new NotFoundException("nehehe")
+        );
+        return appUser.getUsername();
+    }
+
+    @Override
     public List<AppUser> getAllAppUsers() {
         return appUserRepository.findAll();
     }

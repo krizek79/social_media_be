@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                request.username(),
+                appUserService.getAppUserUsernameByEmail(request.email()),
                 request.password()
             )
         );
@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
             .authenticationToken(token)
             .refreshToken(generateRefreshToken().getToken())
             .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
-            .username(request.username())
+            .username(appUserService.getAppUserUsernameByEmail(request.email()))
             .build();
     }
 
