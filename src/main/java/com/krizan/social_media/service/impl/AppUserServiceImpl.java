@@ -62,7 +62,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public String getAppUserUsernameByEmail(String email) {
         AppUser appUser = appUserRepository.findAppUserByEmail(email).orElseThrow(
-            () -> new NotFoundException("nehehe")
+            () -> new NotFoundException("User not found")
         );
         return appUser.getUsername();
     }

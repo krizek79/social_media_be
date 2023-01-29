@@ -2,6 +2,7 @@ package com.krizan.social_media.service.impl;
 
 import com.krizan.social_media.controller.exception.ForbiddenException;
 import com.krizan.social_media.controller.exception.NotFoundException;
+import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.PostCreationRequest;
 import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.model.AppUser;
@@ -35,6 +36,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post createPost(PostCreationRequest request) {
         AppUser appUser = appUserService.getCurrentAppUser();
+        if (request.body() == null || request.body().isEmpty()) {
+            throw new UnsatisfyingParameterException("Body cannot be empty");
+        }
+
         Post post = Post.builder()
             .owner(appUser)
             .body(request.body())
@@ -49,9 +54,10 @@ public class PostServiceImpl implements PostService {
         if (appUser != post.getOwner() && !appUser.getRole().equals(Role.ADMIN)) {
             throw new ForbiddenException("You don't have permission to update this post.");
         }
-        if (request.body() != null) {
+        if (request.body() != null && !request.body().isEmpty()) {
             post.setBody(request.body());
         }
+
         return postRepository.save(post);
     }
 
