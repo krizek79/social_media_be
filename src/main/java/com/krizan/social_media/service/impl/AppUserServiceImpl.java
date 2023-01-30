@@ -9,6 +9,8 @@ import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -75,19 +77,21 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser createAppUser(RegistrationRequest request, Role role) {
         if (request.email() == null)
-            throw new UnsatisfyingParameterException("Email cannot be null.");
+            throw new UnsatisfyingParameterException("Email cannot be null");
+        if (!validateEmail(request.email()))
+            throw new UnsatisfyingParameterException("Email is not valid");
         if (request.email().isEmpty())
-            throw new UnsatisfyingParameterException("Email cannot be empty.");
+            throw new UnsatisfyingParameterException("Email cannot be empty");
         if (request.username() == null)
-            throw new UnsatisfyingParameterException("Username cannot be null.");
+            throw new UnsatisfyingParameterException("Username cannot be null");
         if (request.username().isEmpty())
-            throw new UnsatisfyingParameterException("Username cannot be empty.");
+            throw new UnsatisfyingParameterException("Username cannot be empty");
         if (request.password() == null)
-            throw new UnsatisfyingParameterException("Password cannot be null.");
+            throw new UnsatisfyingParameterException("Password cannot be null");
         if (request.password().isEmpty())
-            throw new UnsatisfyingParameterException("Password cannot be empty.");
+            throw new UnsatisfyingParameterException("Password cannot be empty");
         if (!request.password().equals(request.matchingPassword()))
-            throw new UnsatisfyingParameterException("Passwords do not match.");
+            throw new UnsatisfyingParameterException("Passwords do not match");
 
         AppUser appUser = AppUser.builder()
             .email(request.email())
@@ -106,5 +110,12 @@ public class AppUserServiceImpl implements AppUserService {
     public void deleteAppUser(Long id) {
         AppUser appUser = getAppUserById(id);
         appUserRepository.delete(appUser);
+    }
+
+    private Boolean validateEmail(String email) {
+        String regex = "^[^\\s@]{3,}@[^\\s@]+\\.[^\\s@]{2,4}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
