@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
             .refreshToken(generateRefreshToken().getToken())
             .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
             .username(appUserService.getAppUserUsernameByEmail(request.email()))
+            .role(appUserService.getAppUserByEmail(request.email()).getRole())
             .build();
     }
 
@@ -62,7 +63,8 @@ public class AuthServiceImpl implements AuthService {
             .authenticationToken(token)
             .refreshToken(request.refreshToken())
             .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
-            .username(request.username())
+            .username(appUser.getUsername())
+            .role(appUserService.getAppUserByEmail(appUser.getEmail()).getRole())
             .build();
     }
 
@@ -71,7 +73,6 @@ public class AuthServiceImpl implements AuthService {
         return refreshTokenRepository.save(new RefreshToken());
     }
 
-    // TODO: make exception for not valid refresh token
     @Override
     public void validateRefreshToken(String token) {
         refreshTokenRepository.findByToken(token).orElseThrow(

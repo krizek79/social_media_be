@@ -1,5 +1,6 @@
 package com.krizan.social_media.service.impl;
 
+import com.krizan.social_media.controller.exception.IllegalOperationException;
 import com.krizan.social_media.controller.exception.NotFoundException;
 import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.RegistrationRequest;
@@ -9,6 +10,7 @@ import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +57,13 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUser getAppUserByEmail(String email) {
+        return appUserRepository.findAppUserByEmail(email).orElseThrow(
+            () -> new NotFoundException("User not found")
+        );
+    }
+
+    @Override
     public AppUser getAppUserByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(
             () -> new NotFoundException("User not found")
@@ -82,10 +91,22 @@ public class AppUserServiceImpl implements AppUserService {
             throw new UnsatisfyingParameterException("Email is not valid");
         if (request.email().isEmpty())
             throw new UnsatisfyingParameterException("Email cannot be empty");
+
+        Optional<AppUser> appUserByEmail = appUserRepository.findAppUserByEmail(request.email());
+        if (appUserByEmail.isPresent()) {
+            throw new IllegalOperationException("User with this email already exists");
+        }
+
         if (request.username() == null)
             throw new UnsatisfyingParameterException("Username cannot be null");
         if (request.username().isEmpty())
             throw new UnsatisfyingParameterException("Username cannot be empty");
+
+        Optional<AppUser> appUserByUsername = appUserRepository.findByUsername(request.username());
+        if (appUserByUsername.isPresent()) {
+            throw new IllegalOperationException("This username is already taken");
+        }
+
         if (request.password() == null)
             throw new UnsatisfyingParameterException("Password cannot be null");
         if (request.password().isEmpty())
