@@ -37,8 +37,11 @@ public class AppUser implements UserDetails {
     @Email
     @NotNull
     private String email;
+    private String avatarUrl;
     @OneToMany
     private List<Post> posts;
+    @OneToMany
+    private List<Comment> comments;
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;

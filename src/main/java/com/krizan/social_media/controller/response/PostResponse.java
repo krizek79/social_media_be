@@ -8,13 +8,13 @@ import lombok.Getter;
 public class PostResponse {
 
     private final Long id;
-    private final String ownerUsername;
+    private final AppUserResponse owner;
     private final String body;
     private final LocalDateTime createdAt;
 
     public PostResponse(Post post) {
         this.id = post.getId();
-        this.ownerUsername = post.getOwner().getUsername();
+        this.owner = new AppUserResponse(post.getOwner());
         this.body = post.getBody();
         this.createdAt = post.getCreatedAt();
     }

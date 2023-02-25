@@ -10,11 +10,13 @@ public class AppUserResponse {
 
     private final Long id;
     private final String username;
+    private final String avatarUrl;
     private final List<PostResponse> posts = new ArrayList<>();
 
     public AppUserResponse(AppUser appUser) {
         this.id = appUser.getId();
         this.username = appUser.getUsername();
+        this.avatarUrl = appUser.getAvatarUrl();
         this.posts.addAll(appUser.getPosts()
             .stream()
             .map(PostResponse::new)

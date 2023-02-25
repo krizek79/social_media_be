@@ -119,6 +119,9 @@ public class AppUserServiceImpl implements AppUserService {
             .username(request.username())
             .password(encoder.encode(request.password()))
             .role(role)
+            .avatarUrl(
+                "https://ui-avatars.com/api/?name=" + request.username() + "&background=random"
+            )
             .posts(new ArrayList<>())
             .locked(false)
             .enabled(true)

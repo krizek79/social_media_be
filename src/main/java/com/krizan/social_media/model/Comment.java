@@ -5,10 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,18 +19,16 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Setter
 @Entity
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @NotNull
-    private AppUser owner;
-    @NotNull
+    private Post post;
+    @ManyToOne
+    private AppUser appUser;
     private String body;
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @OneToMany
-    private List<Comment> comments;
 }

@@ -50,4 +50,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             .message(exception.getMessage())
             .build();
     }
+
+    @ExceptionHandler(TokenNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final ExceptionResponse handleTokenNotValidException(
+        TokenNotValidException exception
+    ) {
+        return ExceptionResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .message(exception.getMessage())
+            .build();
+    }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -18,10 +19,10 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     public RefreshToken() {
         this.token = UUID.randomUUID().toString();
-        this.createdAt = LocalDateTime.now();
     }
 }

@@ -1,7 +1,7 @@
 package com.krizan.social_media.service.impl;
 
 import com.krizan.social_media.configuration.JwtProvider;
-import com.krizan.social_media.controller.exception.NotFoundException;
+import com.krizan.social_media.controller.exception.TokenNotValidException;
 import com.krizan.social_media.controller.request.LoginRequest;
 import com.krizan.social_media.controller.request.RefreshTokenRequest;
 import com.krizan.social_media.controller.request.RegistrationRequest;
@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void validateRefreshToken(String token) {
         refreshTokenRepository.findByToken(token).orElseThrow(
-            () -> new NotFoundException("Token is not valid.")
+            () -> new TokenNotValidException("Token is not valid.")
         );
     }
 }

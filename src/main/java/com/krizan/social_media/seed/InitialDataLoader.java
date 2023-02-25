@@ -33,12 +33,25 @@ public class InitialDataLoader implements CommandLineRunner {
             .email("admin@admin.com")
             .username("admin")
             .password(encoder.encode("admin"))
+            .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random")
             .posts(new ArrayList<>())
             .role(Role.ADMIN)
             .enabled(true)
             .locked(false)
             .build();
         appUserRepository.save(admin);
+
+        AppUser user = AppUser.builder()
+            .email("krizan.matej79@gmail.com")
+            .username("Matej Križan")
+            .password(encoder.encode("pass"))
+            .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random")
+            .posts(new ArrayList<>())
+            .role(Role.USER)
+            .enabled(true)
+            .locked(false)
+            .build();
+        appUserRepository.save(user);
     }
 
     private void seedPostTable() {
