@@ -48,6 +48,8 @@ public class SecurityConfig {
     private RSAPublicKey publicKey;
     @Value("${jwt.private.key}")
     private RSAPrivateKey privateKey;
+    @Value("${open.endpoints}")
+    private String[] openEndpoints;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -56,7 +58,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authenticationProvider(daoAuthenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers(openEndpoints).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

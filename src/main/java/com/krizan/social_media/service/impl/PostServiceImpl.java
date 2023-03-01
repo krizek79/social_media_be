@@ -13,8 +13,10 @@ import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -71,3 +73,4 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 }
+
