@@ -38,9 +38,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        AppUser principal = appUserService.getAppUserByUsernameOrEmail(request.usernameOrEmail());
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                appUserService.getAppUserUsernameByEmail(request.email()),
+                principal.getUsername(),
                 request.password()
             )
         );
@@ -51,8 +52,8 @@ public class AuthServiceImpl implements AuthService {
             .authenticationToken(token)
             .refreshToken(generateRefreshToken().getToken())
             .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
-            .username(appUserService.getAppUserUsernameByEmail(request.email()))
-            .role(appUserService.getAppUserByEmail(request.email()).getRole())
+            .username(principal.getUsername())
+            .role(principal.getRole())
             .build();
     }
 

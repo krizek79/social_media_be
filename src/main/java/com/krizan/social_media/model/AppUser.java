@@ -1,5 +1,7 @@
 package com.krizan.social_media.model;
 
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,14 +35,18 @@ public class AppUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @Column(unique = true)
     private String username;
     @Email
     @NotNull
+    @Column(unique = true)
     private String email;
+    @Nullable
+    private String bio;
     private String avatarUrl;
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private List<Post> posts;
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private List<Comment> comments;
     @Enumerated(EnumType.STRING)
     @NotNull

@@ -30,6 +30,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getAllPostsByUsername(String username) {
+        AppUser owner = appUserService.getAppUserByUsername(username);
+        return postRepository.findPostsByOwner(owner);
+    }
+
+    @Override
     public Post getPostById(Long id) {
         return postRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Post with id: " + id + " does not exist"));
@@ -46,6 +52,7 @@ public class PostServiceImpl implements PostService {
             .owner(appUser)
             .body(request.body())
             .build();
+
         return postRepository.save(post);
     }
 

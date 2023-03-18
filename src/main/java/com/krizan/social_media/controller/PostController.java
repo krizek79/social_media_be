@@ -6,6 +6,7 @@ import com.krizan.social_media.controller.response.PostResponse;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,7 +48,20 @@ public class PostController {
         return postService.getAllPosts()
             .stream()
             .map(PostResponse::new)
-            .toList();
+            .collect(Collectors.toList());
+    }
+
+    @GetMapping(params = "username")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public List<PostResponse> getAllPostsByUsername(@RequestParam String username) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": GET - getAllPostsByUsername (username: " + username + ")"
+        );
+        return postService.getAllPostsByUsername(username)
+            .stream()
+            .map(PostResponse::new)
+            .collect(Collectors.toList());
     }
 
     @PatchMapping("/{id}")

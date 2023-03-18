@@ -33,7 +33,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .email("admin@admin.com")
             .username("admin")
             .password(encoder.encode("admin"))
-            .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random")
+            .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
             .posts(new ArrayList<>())
             .role(Role.ADMIN)
             .enabled(true)
@@ -45,7 +45,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .email("krizan.matej79@gmail.com")
             .username("Matej Križan")
             .password(encoder.encode("pass"))
-            .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random")
+            .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random&size=256")
             .posts(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
@@ -55,13 +55,13 @@ public class InitialDataLoader implements CommandLineRunner {
     }
 
     private void seedPostTable() {
-        AppUser appUser = appUserRepository.findAppUserByEmail("admin@admin.com")
+        AppUser admin = appUserRepository.findAppUserByEmail("admin@admin.com")
             .orElseThrow(() -> new NotFoundException("User not found"));
 
         List<Post> posts = new ArrayList<>();
 
         Post post1 = Post.builder()
-            .owner(appUser)
+            .owner(admin)
             .body(""
                 + "My wife said I should do lunges to stay in shape. "
                 + "That would be a big step forward."
@@ -71,7 +71,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post1);
 
         Post post2 = Post.builder()
-            .owner(appUser)
+            .owner(admin)
             .body(""
                 + "Why do seagulls fly over the ocean? Because if they flew over the bay, "
                 + "we'd call them bagels."
@@ -81,7 +81,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post2);
 
         Post post3 = Post.builder()
-            .owner(appUser)
+            .owner(admin)
             .body(""
                 + "A skeleton walks into a bar and says, 'Hey, bartender. "
                 + "I'll have one beer and a mop."
@@ -91,7 +91,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post3);
 
         Post post4 = Post.builder()
-            .owner(appUser)
+            .owner(admin)
             .body(""
                 + "My wife is really mad at the fact that I have no sense of direction. "
                 + "So I packed up my stuff and right!"

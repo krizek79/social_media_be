@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
-        log.info("POST - login");
+        log.info("POST - login (username/email: " + request.usernameOrEmail() + ")");
         return authService.login(request);
     }
 

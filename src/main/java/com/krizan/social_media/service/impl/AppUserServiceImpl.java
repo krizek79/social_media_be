@@ -4,6 +4,7 @@ import com.krizan.social_media.controller.exception.IllegalOperationException;
 import com.krizan.social_media.controller.exception.NotFoundException;
 import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.RegistrationRequest;
+import com.krizan.social_media.controller.request.UpdateAppUserRequest;
 import com.krizan.social_media.model.AppUser;
 import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.AppUserRepository;
@@ -73,11 +74,12 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public String getAppUserUsernameByEmail(String email) {
-        AppUser appUser = appUserRepository.findAppUserByEmail(email).orElseThrow(
-            () -> new NotFoundException("User not found")
-        );
-        return appUser.getUsername();
+    public AppUser getAppUserByUsernameOrEmail(String usernameOrEmail) {
+        return appUserRepository
+            .findAppUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+            .orElseThrow(
+                () -> new NotFoundException("User not found")
+            );
     }
 
     @Override
@@ -96,7 +98,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         Optional<AppUser> appUserByEmail = appUserRepository.findAppUserByEmail(request.email());
         if (appUserByEmail.isPresent()) {
-            throw new IllegalOperationException("User with this email already exists");
+            throw new IllegalOperationException("User with this username or email already exists");
         }
 
         if (request.username() == null)
@@ -122,12 +124,34 @@ public class AppUserServiceImpl implements AppUserService {
             .password(encoder.encode(request.password()))
             .role(role)
             .avatarUrl(
-                "https://ui-avatars.com/api/?name=" + request.username() + "&background=random"
+                "https://ui-avatars.com/api/?name="
+                    + request.username()
+                    + "&background=random&size=256"
             )
             .posts(new ArrayList<>())
             .locked(false)
             .enabled(true)
             .build();
+
+        return appUserRepository.save(appUser);
+    }
+
+    @Override
+    public AppUser updateAppUser(Long id, UpdateAppUserRequest request) {
+        AppUser appUser = getAppUserById(id);
+
+        if (request.username() != null) {
+            appUser.setUsername(request.username());
+        }
+        if (request.email() != null) {
+            appUser.setEmail(request.email());
+        }
+        if (request.avatarUrl() != null) {
+            appUser.setAvatarUrl(request.avatarUrl());
+        }
+        if (request.bio() != null) {
+            appUser.setBio(request.bio());
+        }
 
         return appUserRepository.save(appUser);
     }
@@ -139,7 +163,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     private Boolean validateEmail(String email) {
-        String regex = "^[^\\s@]{3,}@[^\\s@]+\\.[^\\s@]{2,4}$";
+        String regex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
