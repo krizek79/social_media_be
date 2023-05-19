@@ -11,11 +11,13 @@ public class PostResponse {
     private final AppUserResponse owner;
     private final String body;
     private final LocalDateTime createdAt;
+    private final Integer numberOfComments;
 
     public PostResponse(Post post) {
         this.id = post.getId();
         this.owner = new AppUserResponse(post.getOwner());
         this.body = post.getBody();
         this.createdAt = post.getCreatedAt();
+        this.numberOfComments = post.getComments().size();
     }
 }

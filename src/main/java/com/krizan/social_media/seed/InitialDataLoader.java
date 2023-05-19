@@ -6,6 +6,7 @@ import com.krizan.social_media.model.Post;
 import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class InitialDataLoader implements CommandLineRunner {
 
@@ -35,6 +37,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .password(encoder.encode("admin"))
             .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
             .posts(new ArrayList<>())
+            .comments(new ArrayList<>())
             .role(Role.ADMIN)
             .enabled(true)
             .locked(false)
@@ -47,6 +50,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .password(encoder.encode("pass"))
             .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random&size=256")
             .posts(new ArrayList<>())
+            .comments(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -66,6 +70,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "My wife said I should do lunges to stay in shape. "
                 + "That would be a big step forward."
             )
+            .comments(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post1);
@@ -76,6 +81,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "Why do seagulls fly over the ocean? Because if they flew over the bay, "
                 + "we'd call them bagels."
             )
+            .comments(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post2);
@@ -86,6 +92,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "A skeleton walks into a bar and says, 'Hey, bartender. "
                 + "I'll have one beer and a mop."
             )
+            .comments(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post3);
@@ -96,9 +103,12 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "My wife is really mad at the fact that I have no sense of direction. "
                 + "So I packed up my stuff and right!"
             )
+            .comments(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post4);
+
+        admin.getPosts().addAll(posts);
 
         postRepository.saveAll(posts);
     }

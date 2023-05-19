@@ -48,7 +48,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getCurrentAppUser() {
-        Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Jwt principal =
+            (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getAppUserByUsername(principal.getSubject());
     }
 
@@ -129,6 +130,7 @@ public class AppUserServiceImpl implements AppUserService {
                     + "&background=random&size=256"
             )
             .posts(new ArrayList<>())
+            .comments(new ArrayList<>())
             .locked(false)
             .enabled(true)
             .build();

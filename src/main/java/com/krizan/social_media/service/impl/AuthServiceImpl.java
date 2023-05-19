@@ -1,6 +1,5 @@
 package com.krizan.social_media.service.impl;
 
-import com.krizan.social_media.configuration.JwtProvider;
 import com.krizan.social_media.controller.exception.TokenNotValidException;
 import com.krizan.social_media.controller.request.LoginRequest;
 import com.krizan.social_media.controller.request.RefreshTokenRequest;
@@ -12,6 +11,7 @@ import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.RefreshTokenRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.AuthService;
+import com.krizan.social_media.service.api.JwtService;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final AppUserService appUserService;
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -46,12 +46,12 @@ public class AuthServiceImpl implements AuthService {
             )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtProvider.generateTokenByAuthentication(authentication);
+        String token = jwtService.generateTokenByAuthentication(authentication);
 
         return AuthResponse.builder()
             .authenticationToken(token)
             .refreshToken(generateRefreshToken().getToken())
-            .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
+            .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationTimeInMillis()))
             .username(principal.getUsername())
             .role(principal.getRole())
             .build();
@@ -61,11 +61,11 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         validateRefreshToken(request.refreshToken());
         AppUser appUser = appUserService.getAppUserByUsername(request.username());
-        String token = jwtProvider.generateTokenByAppUser(appUser);
+        String token = jwtService.generateTokenByAppUser(appUser);
         return AuthResponse.builder()
             .authenticationToken(token)
             .refreshToken(request.refreshToken())
-            .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTimeInMillis()))
+            .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationTimeInMillis()))
             .username(appUser.getUsername())
             .role(appUserService.getAppUserByEmail(appUser.getEmail()).getRole())
             .build();

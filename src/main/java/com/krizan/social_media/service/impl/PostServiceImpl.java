@@ -11,6 +11,7 @@ import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.PostRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,10 @@ public class PostServiceImpl implements PostService {
         Post post = Post.builder()
             .owner(appUser)
             .body(request.body())
+            .comments(new ArrayList<>())
             .build();
+
+        appUser.getPosts().add(post);
 
         return postRepository.save(post);
     }
