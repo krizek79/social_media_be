@@ -48,6 +48,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .email("krizan.matej79@gmail.com")
             .username("Matej Križan")
             .password(encoder.encode("pass"))
+            .bio("We Choose Truth Over Facts!")
             .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random&size=256")
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())

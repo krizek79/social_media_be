@@ -7,9 +7,9 @@ import lombok.Builder;
 @Builder
 public record AuthResponse (
     String username,
+    String avatarUrl,
     Role role,
     String authenticationToken,
-    String refreshToken,
     Instant expiresAt
 ) {
 }
