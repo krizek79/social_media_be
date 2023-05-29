@@ -36,6 +36,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .username("admin")
             .password(encoder.encode("admin"))
             .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
+            .bio("Your favorite ruler of this kingdom")
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
             .role(Role.ADMIN)
@@ -67,8 +68,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         Post post1 = Post.builder()
             .owner(admin)
-            .body(""
-                + "My wife said I should do lunges to stay in shape. "
+            .body("My wife said I should do lunges to stay in shape. "
                 + "That would be a big step forward."
             )
             .comments(new ArrayList<>())
@@ -78,8 +78,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         Post post2 = Post.builder()
             .owner(admin)
-            .body(""
-                + "Why do seagulls fly over the ocean? Because if they flew over the bay, "
+            .body("Why do seagulls fly over the ocean? Because if they flew over the bay, "
                 + "we'd call them bagels."
             )
             .comments(new ArrayList<>())
@@ -89,8 +88,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         Post post3 = Post.builder()
             .owner(admin)
-            .body(""
-                + "A skeleton walks into a bar and says, 'Hey, bartender. "
+            .body("A skeleton walks into a bar and says, 'Hey, bartender. "
                 + "I'll have one beer and a mop."
             )
             .comments(new ArrayList<>())
@@ -100,8 +98,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         Post post4 = Post.builder()
             .owner(admin)
-            .body(""
-                + "My wife is really mad at the fact that I have no sense of direction. "
+            .body("My wife is really mad at the fact that I have no sense of direction. "
                 + "So I packed up my stuff and right!"
             )
             .comments(new ArrayList<>())

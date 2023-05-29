@@ -29,6 +29,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             .build();
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public final ExceptionResponse handleUnauthenticatedException(
+        UnauthorizedException exception
+    ) {
+        return ExceptionResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .message(exception.getMessage())
+            .build();
+    }
+
     @ExceptionHandler(UnsatisfyingParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final ExceptionResponse handleUnsatisfyingParameterException(

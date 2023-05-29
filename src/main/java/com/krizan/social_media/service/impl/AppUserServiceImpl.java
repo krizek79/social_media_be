@@ -61,13 +61,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser getAppUserByEmail(String email) {
-        return appUserRepository.findAppUserByEmail(email).orElseThrow(
-            () -> new NotFoundException("User not found")
-        );
-    }
-
-    @Override
     public AppUser getAppUserByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(
             () -> new NotFoundException("User not found")
@@ -75,12 +68,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser getAppUserByUsernameOrEmail(String usernameOrEmail) {
-        return appUserRepository
-            .findAppUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-            .orElseThrow(
-                () -> new NotFoundException("User not found")
-            );
+    public Optional<AppUser> getAppUserByUsernameOrEmail(String usernameOrEmail) {
+        return appUserRepository.findAppUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.krizan.social_media.service.impl;
 
+import com.krizan.social_media.controller.exception.UnauthorizedException;
 import com.krizan.social_media.controller.request.LoginRequest;
 import com.krizan.social_media.controller.request.RegistrationRequest;
 import com.krizan.social_media.controller.response.AuthResponse;
@@ -33,7 +34,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        AppUser principal = appUserService.getAppUserByUsernameOrEmail(request.usernameOrEmail());
+        AppUser principal = appUserService
+            .getAppUserByUsernameOrEmail(request.usernameOrEmail())
+            .orElseThrow(UnauthorizedException::new);
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 principal.getUsername(),
