@@ -36,9 +36,10 @@ public class InitialDataLoader implements CommandLineRunner {
             .username("admin")
             .password(encoder.encode("admin"))
             .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
-            .bio("Your favorite ruler of this kingdom")
+            .bio("Your friendly neighbour dictator :)")
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .role(Role.ADMIN)
             .enabled(true)
             .locked(false)
@@ -53,6 +54,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random&size=256")
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -72,6 +74,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "That would be a big step forward."
             )
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post1);
@@ -82,6 +85,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "we'd call them bagels."
             )
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post2);
@@ -92,6 +96,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "I'll have one beer and a mop."
             )
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post3);
@@ -102,6 +107,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 + "So I packed up my stuff and right!"
             )
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post4);

@@ -45,15 +45,17 @@ public class AppUser implements UserDetails {
     @Nullable
     private String bio;
     private String avatarUrl;
-    @OneToMany(orphanRemoval = true, mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Post> posts;
-    @OneToMany(orphanRemoval = true, mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Comment> comments;
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;
     @NotNull
     private String password;
+    @OneToMany(orphanRemoval = true, mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Post> posts;
+    @OneToMany(orphanRemoval = true, mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+    @OneToMany(orphanRemoval = true, mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<Like> likes;
     private Boolean locked;
     private Boolean enabled;
 

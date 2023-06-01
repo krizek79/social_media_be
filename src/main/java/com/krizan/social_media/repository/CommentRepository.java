@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findAllByPost(Post post);
+    List<Comment> findAllByPostAndParentCommentIsNull(Post post);
 }

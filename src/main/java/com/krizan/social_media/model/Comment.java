@@ -39,4 +39,6 @@ public class Comment {
     private LocalDateTime createdAt;
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "parentComment")
     private List<Comment> childComments;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "comment")
+    private List<Like> likes;
 }

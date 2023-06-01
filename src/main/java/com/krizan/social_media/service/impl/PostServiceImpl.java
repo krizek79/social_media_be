@@ -53,6 +53,7 @@ public class PostServiceImpl implements PostService {
             .owner(appUser)
             .body(request.body())
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .build();
 
         appUser.getPosts().add(post);

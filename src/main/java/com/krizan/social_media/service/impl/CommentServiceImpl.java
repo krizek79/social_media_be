@@ -13,11 +13,12 @@ import com.krizan.social_media.repository.CommentRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.CommentService;
 import com.krizan.social_media.service.api.PostService;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -31,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getAllCommentsByPostId(Long postId) {
         Post post = postService.getPostById(postId);
-        return commentRepository.findAllByPost(post);
+        return commentRepository.findAllByPostAndParentCommentIsNull(post);
     }
 
     @Override
@@ -58,13 +59,13 @@ public class CommentServiceImpl implements CommentService {
             parentComment = null;
         }
 
-
         Comment comment = Comment.builder()
             .author(author)
             .post(post)
             .parentComment(parentComment)
             .body(request.body())
             .childComments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .build();
 
         if (parentComment != null) {
