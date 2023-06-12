@@ -3,6 +3,7 @@ package com.krizan.social_media.controller;
 import com.krizan.social_media.controller.request.CreateCommentRequest;
 import com.krizan.social_media.controller.request.UpdateCommentRequest;
 import com.krizan.social_media.controller.response.CommentResponse;
+import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.CommentService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,10 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
     private final CommentService commentService;
+    private final AppUserService appUserService;
 
     @GetMapping("/post/{postId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<CommentResponse> getAllCommentsByPostId(@PathVariable("postId") Long postId) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": GET - getAllCommentsByPostId (id: " + postId + ")"
+        );
         return commentService.getAllCommentsByPostId(postId)
             .stream()
             .map(CommentResponse::new)
@@ -38,12 +44,20 @@ public class CommentController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public CommentResponse getCommentById(@PathVariable("id") Long id) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": GET - getCommentById (id: " + id + ")"
+        );
         return new CommentResponse(commentService.getCommentById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public CommentResponse createComment(@RequestBody CreateCommentRequest request) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": POST - createComment"
+        );
         return new CommentResponse(commentService.createComment(request));
     }
 
@@ -53,12 +67,20 @@ public class CommentController {
         @PathVariable("id") Long id,
         @RequestBody UpdateCommentRequest request
     ) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": PATCH - updateComment (id: " + id + ")"
+        );
         return new CommentResponse(commentService.updateComment(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public void deleteComment(@PathVariable("id") Long id) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": DELETE - deleteComment (id: " + id + ")"
+        );
         commentService.deleteComment(id);
     }
 }
