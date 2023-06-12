@@ -120,6 +120,7 @@ public class AppUserServiceImpl implements AppUserService {
             )
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
             .locked(false)
             .enabled(true)
             .build();

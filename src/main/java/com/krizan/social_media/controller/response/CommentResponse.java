@@ -16,6 +16,7 @@ public class CommentResponse {
     private final List<CommentResponse> childComments;
     private final LocalDateTime createdAt;
     private final String body;
+    private final List<LikeResponse> likes;
 
     public CommentResponse(Comment comment) {
         this.id = comment.getId();
@@ -32,5 +33,8 @@ public class CommentResponse {
             .collect(Collectors.toList());
         this.createdAt = comment.getCreatedAt();
         this.body = comment.getBody();
+        this.likes = comment.getLikes().stream()
+            .map(LikeResponse::new)
+            .collect(Collectors.toList());
     }
 }
