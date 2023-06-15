@@ -1,7 +1,9 @@
 package com.krizan.social_media.service.api;
 
+import com.krizan.social_media.model.Follow;
+
 public interface FollowService {
 
-    void follow(Long id);
-    void unfollow(Long id);
+    Follow follow(Long followingId);
+    Follow unfollow(Long followingId);
 }

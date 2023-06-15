@@ -56,6 +56,10 @@ public class AppUser implements UserDetails {
     private List<Comment> comments;
     @OneToMany(orphanRemoval = true, mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Like> likes;
+    @OneToMany(orphanRemoval = true, mappedBy = "follower", cascade = CascadeType.ALL)
+    private List<Follow> followers;
+    @OneToMany(orphanRemoval = true, mappedBy = "followed", cascade = CascadeType.ALL)
+    private List<Follow> followed;
     private Boolean locked;
     private Boolean enabled;
 

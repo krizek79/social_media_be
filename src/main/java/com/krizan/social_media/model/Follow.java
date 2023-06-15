@@ -26,5 +26,5 @@ public class Follow {
     @ManyToOne(fetch = FetchType.LAZY)
     private AppUser follower;
     @ManyToOne(fetch = FetchType.LAZY)
-    private AppUser following;
+    private AppUser followed;
 }
