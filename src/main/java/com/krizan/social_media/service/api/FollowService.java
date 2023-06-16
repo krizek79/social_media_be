@@ -4,6 +4,6 @@ import com.krizan.social_media.model.Follow;
 
 public interface FollowService {
 
-    Follow follow(Long followingId);
-    Follow unfollow(Long followingId);
+    Follow follow(Long followedId);
+    Follow unfollow(Long followedId);
 }

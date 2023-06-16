@@ -59,7 +59,7 @@ public class AppUser implements UserDetails {
     @OneToMany(orphanRemoval = true, mappedBy = "follower", cascade = CascadeType.ALL)
     private List<Follow> followers;
     @OneToMany(orphanRemoval = true, mappedBy = "followed", cascade = CascadeType.ALL)
-    private List<Follow> followed;
+    private List<Follow> following;
     private Boolean locked;
     private Boolean enabled;
 
