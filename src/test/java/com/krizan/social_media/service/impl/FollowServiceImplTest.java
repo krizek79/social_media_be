@@ -1,7 +1,7 @@
 package com.krizan.social_media.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -84,8 +84,8 @@ class FollowServiceImplTest {
         verify(followRepository).save(any(Follow.class));
 
         assertEquals(expectedFollow, result);
-        assertNotNull(currentUser.getFollowing());
-        assertNotNull(followedUser.getFollowers());
+        assertFalse(currentUser.getFollowing().isEmpty());
+        assertFalse(followedUser.getFollowers().isEmpty());
     }
 
     @Test

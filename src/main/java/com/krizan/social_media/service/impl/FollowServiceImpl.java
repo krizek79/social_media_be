@@ -22,22 +22,25 @@ public class FollowServiceImpl implements FollowService {
     public Follow follow(Long followedId) {
         AppUser currentUser = appUserService.getCurrentAppUser();
         AppUser followedUser = appUserService.getAppUserById(followedId);
-        Optional<Follow> follow = followRepository.findByFollower_IdAndFollowed_Id(
+        Optional<Follow> existingFollow = followRepository.findByFollower_IdAndFollowed_Id(
             currentUser.getId(),
             followedUser.getId()
         );
-        if (follow.isPresent()) {
+        if (existingFollow.isPresent()) {
             throw new IllegalOperationException(
                 "AppUser with id: " + currentUser.getId() + " already follows AppUser with id: "
                     + followedUser.getId() + "...");
         }
 
-        return followRepository.save(
-            Follow.builder()
-                .follower(currentUser)
-                .followed(followedUser)
-                .build()
-        );
+        Follow follow = Follow.builder()
+            .follower(currentUser)
+            .followed(followedUser)
+            .build();
+
+        currentUser.getFollowing().add(follow);
+        followedUser.getFollowers().add(follow);
+
+        return followRepository.save(follow);
     }
 
     @Override
@@ -51,6 +54,9 @@ public class FollowServiceImpl implements FollowService {
             "AppUser with id: " + currentUser.getId() + " does not follow AppUser with id: "
                 + followedUser.getId() + "..."
         ));
+
+        currentUser.getFollowing().remove(follow);
+        followedUser.getFollowers().remove(follow);
 
         followRepository.delete(follow);
         return follow;

@@ -121,6 +121,8 @@ public class AppUserServiceImpl implements AppUserService {
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
             .likes(new ArrayList<>())
+            .following(new ArrayList<>())
+            .followers(new ArrayList<>())
             .locked(false)
             .enabled(true)
             .build();
