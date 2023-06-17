@@ -1,2 +1,2 @@
 #!/bin/sh
-./mvnw clean package -DskipTests
+./mvnw clean package

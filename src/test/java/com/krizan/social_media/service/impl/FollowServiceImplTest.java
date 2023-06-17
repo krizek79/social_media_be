@@ -35,27 +35,30 @@ class FollowServiceImplTest {
     @InjectMocks
     private FollowServiceImpl followService;
 
+    private AppUser currentUser;
+    private AppUser followedUser;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-    }
 
-    @Test
-    public void followShouldSaveFollow() {
-        //  Arrange
-        AppUser currentUser = AppUser.builder()
+        currentUser = AppUser.builder()
             .id(1L)
             .username("follower")
             .followers(new ArrayList<>())
             .following(new ArrayList<>())
             .build();
-        AppUser followedUser = AppUser.builder()
+        followedUser = AppUser.builder()
             .id(2L)
             .username("followed")
             .followers(new ArrayList<>())
             .following(new ArrayList<>())
             .build();
+    }
 
+    @Test
+    public void followShouldSaveFollow() {
+        //  Arrange
         when(appUserService.getCurrentAppUser()).thenReturn(currentUser);
         when(appUserService.getAppUserById(followedUser.getId())).thenReturn(followedUser);
         when(
@@ -91,19 +94,6 @@ class FollowServiceImplTest {
     @Test
     public void followShouldThrowIllegalOperationException() {
         //  Arrange
-        AppUser currentUser = AppUser.builder()
-            .id(1L)
-            .username("follower")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-        AppUser followedUser = AppUser.builder()
-            .id(2L)
-            .username("followed")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-
         when(appUserService.getCurrentAppUser()).thenReturn(currentUser);
         when(appUserService.getAppUserById(followedUser.getId())).thenReturn(followedUser);
         when(
@@ -130,19 +120,6 @@ class FollowServiceImplTest {
     @Test
     public void unfollowShouldDeleteFollow() {
         //  Arrange
-        AppUser currentUser = AppUser.builder()
-            .id(1L)
-            .username("follower")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-        AppUser followedUser = AppUser.builder()
-            .id(2L)
-            .username("followed")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-
         Follow existingFollow = Follow.builder()
             .follower(currentUser)
             .followed(followedUser)
@@ -177,19 +154,6 @@ class FollowServiceImplTest {
     @Test
     public void unfollowShouldThrowNotFoundException() {
         //  Arrange
-        AppUser currentUser = AppUser.builder()
-            .id(1L)
-            .username("follower")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-        AppUser followedUser = AppUser.builder()
-            .id(2L)
-            .username("followed")
-            .followers(new ArrayList<>())
-            .following(new ArrayList<>())
-            .build();
-
         when(appUserService.getCurrentAppUser()).thenReturn(currentUser);
         when(appUserService.getAppUserById(followedUser.getId())).thenReturn(followedUser);
         when(
