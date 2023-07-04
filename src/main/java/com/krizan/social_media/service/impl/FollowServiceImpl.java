@@ -37,9 +37,6 @@ public class FollowServiceImpl implements FollowService {
             .followed(followedUser)
             .build();
 
-        currentUser.getFollowing().add(follow);
-        followedUser.getFollowers().add(follow);
-
         return followRepository.save(follow);
     }
 
@@ -54,9 +51,6 @@ public class FollowServiceImpl implements FollowService {
             "AppUser with id: " + currentUser.getId() + " does not follow AppUser with id: "
                 + followedUser.getId() + "..."
         ));
-
-        currentUser.getFollowing().remove(follow);
-        followedUser.getFollowers().remove(follow);
 
         followRepository.delete(follow);
         return follow;

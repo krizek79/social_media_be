@@ -36,7 +36,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .username("admin")
             .password(encoder.encode("admin"))
             .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
-            .bio("Your friendly neighbour dictator :)")
+            .bio("hehehehe xd")
             .posts(new ArrayList<>())
             .comments(new ArrayList<>())
             .likes(new ArrayList<>())

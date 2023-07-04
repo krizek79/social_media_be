@@ -1,6 +1,7 @@
 package com.krizan.social_media.controller;
 
 import com.krizan.social_media.controller.response.FollowResponse;
+import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class FollowController {
 
     private final FollowService followService;
+    private final AppUserService appUserService;
 
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public FollowResponse follow(@PathVariable("id") Long id) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": POST - follow (id: " + id + ")"
+        );
         return new FollowResponse(followService.follow(id));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public FollowResponse unfollow(@PathVariable("id") Long id) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": POST - unfollow (id: " + id + ")"
+        );
         return new FollowResponse(followService.unfollow(id));
     }
 }
