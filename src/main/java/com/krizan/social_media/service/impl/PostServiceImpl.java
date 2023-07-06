@@ -12,9 +12,10 @@ import com.krizan.social_media.repository.PostRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
 import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,14 +27,14 @@ public class PostServiceImpl implements PostService {
     private final AppUserService appUserService;
 
     @Override
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     @Override
-    public List<Post> getAllPostsByUsername(String username) {
+    public Page<Post> getAllPostsByUsername(Pageable pageable, String username) {
         AppUser owner = appUserService.getAppUserByUsername(username);
-        return postRepository.findPostsByOwner(owner);
+        return postRepository.findPostsByOwnerOrderByCreatedAtDesc(pageable, owner);
     }
 
     @Override

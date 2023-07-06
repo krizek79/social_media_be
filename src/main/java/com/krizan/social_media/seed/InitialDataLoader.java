@@ -118,6 +118,29 @@ public class InitialDataLoader implements CommandLineRunner {
 
         admin.getPosts().addAll(posts);
 
+        AppUser user1 = appUserRepository.findAppUserByEmail("krizan.matej79@gmail.com")
+            .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Post post5 = Post.builder()
+            .owner(user1)
+            .body("What did the snail who was riding on the turtle's back say? Wheeeee!")
+            .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
+            .createdAt(LocalDateTime.now())
+            .build();
+        posts.add(post5);
+
+        Post post6 = Post.builder()
+            .owner(user1)
+            .body("What does a pig put on dry skin? Oinkment.")
+            .comments(new ArrayList<>())
+            .likes(new ArrayList<>())
+            .createdAt(LocalDateTime.now())
+            .build();
+        posts.add(post6);
+
+        user1.getPosts().addAll(posts);
+
         postRepository.saveAll(posts);
     }
 }
