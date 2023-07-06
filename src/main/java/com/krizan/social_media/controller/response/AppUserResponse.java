@@ -9,6 +9,7 @@ import lombok.Getter;
 public class AppUserResponse {
 
     private final Long id;
+    private final String role;
     private final String username;
     private final String email;
     private final String bio;
@@ -19,6 +20,7 @@ public class AppUserResponse {
 
     public AppUserResponse(AppUser appUser) {
         this.id = appUser.getId();
+        this.role = appUser.getRole().name();
         this.username = appUser.getUsername();
         this.email = appUser.getEmail();
         this.bio = appUser.getBio();

@@ -3,6 +3,7 @@ package com.krizan.social_media.service.impl;
 import com.krizan.social_media.controller.exception.UnauthorizedException;
 import com.krizan.social_media.controller.request.LoginRequest;
 import com.krizan.social_media.controller.request.RegistrationRequest;
+import com.krizan.social_media.controller.response.AppUserResponse;
 import com.krizan.social_media.controller.response.AuthResponse;
 import com.krizan.social_media.model.AppUser;
 import com.krizan.social_media.model.Role;
@@ -49,9 +50,7 @@ public class AuthServiceImpl implements AuthService {
         return AuthResponse.builder()
             .authenticationToken(token)
             .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationTimeInMillis()))
-            .username(principal.getUsername())
-            .avatarUrl(principal.getAvatarUrl())
-            .role(principal.getRole())
+            .appUserResponse(new AppUserResponse(principal))
             .build();
     }
 }
