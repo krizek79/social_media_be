@@ -7,12 +7,12 @@ import lombok.Getter;
 public class FollowResponse {
 
     private final Long id;
-    private final String follower;
-    private final String followed;
+    private final SimpleFollowAppUserResponse follower;
+    private final SimpleFollowAppUserResponse followed;
 
     public FollowResponse(Follow follow) {
         this.id = follow.getId();
-        this.follower = follow.getFollower().getUsername();
-        this.followed = follow.getFollowed().getUsername();
+        this.follower = new SimpleFollowAppUserResponse(follow.getFollower());
+        this.followed = new SimpleFollowAppUserResponse(follow.getFollowed());
     }
 }

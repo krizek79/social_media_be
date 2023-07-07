@@ -48,9 +48,13 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateTokenByAuthentication(authentication);
 
         return AuthResponse.builder()
-            .authenticationToken(token)
-            .expiresAt(Instant.now().plusMillis(jwtService.getJwtExpirationTimeInMillis()))
-            .appUserResponse(new AppUserResponse(principal))
+            .token(token)
+            .expiresAt(
+                Instant.now()
+                    .plusMillis(jwtService.getJwtExpirationTimeInMillis())
+                    .toString()
+            )
+            .user(new AppUserResponse(principal))
             .build();
     }
 }
