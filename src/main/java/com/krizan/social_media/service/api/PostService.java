@@ -10,6 +10,7 @@ public interface PostService {
 
     Page<Post> getAllPosts(Pageable pageable);
     Page<Post> getAllPostsByUsername(Pageable pageable, String username);
+    Page<Post> getPostsOfFollowedUsers(Pageable pageable);
     Post getPostById(Long id);
     Post createPost(PostCreationRequest request);
     Post updatePost(Long id, PostUpdateRequest request);

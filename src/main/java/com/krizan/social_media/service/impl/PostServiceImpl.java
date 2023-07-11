@@ -6,17 +6,21 @@ import com.krizan.social_media.controller.exception.UnsatisfyingParameterExcepti
 import com.krizan.social_media.controller.request.PostCreationRequest;
 import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.model.AppUser;
+import com.krizan.social_media.model.Follow;
 import com.krizan.social_media.model.Post;
 import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.PostRepository;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,13 +32,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> getAllPosts(Pageable pageable) {
-        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return postRepository.findAll(pageable);
     }
 
     @Override
     public Page<Post> getAllPostsByUsername(Pageable pageable, String username) {
         AppUser owner = appUserService.getAppUserByUsername(username);
-        return postRepository.findPostsByOwnerOrderByCreatedAtDesc(pageable, owner);
+        return postRepository.findPostsByOwner(pageable, owner);
+    }
+
+    @Override
+    public Page<Post> getPostsOfFollowedUsers(Pageable pageable) {
+        AppUser currentUser = appUserService.getCurrentAppUser();
+        List<Follow> followedUsers = currentUser.getFollowing();
+        List<AppUser> users = followedUsers.stream()
+            .map(Follow::getFollowed)
+            .collect(Collectors.toList());
+        return postRepository.findPostsByOwnerInOrOwner(pageable, users, currentUser);
     }
 
     @Override

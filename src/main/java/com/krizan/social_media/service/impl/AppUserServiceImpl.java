@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,6 +77,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<AppUser> getAllAppUsers() {
         return appUserRepository.findAll();
+    }
+
+    @Override
+    public Page<AppUser> searchForAppUsersLikeUsername(Pageable pageable, String username) {
+        return appUserRepository.findAllByUsernameContainingIgnoreCase(pageable, username);
     }
 
     @Override

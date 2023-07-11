@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findPostsByOwnerOrderByCreatedAtDesc(Pageable pageable, AppUser appUser);
-    Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<Post> findPostsByOwner(Pageable pageable, AppUser appUser);
+    Page<Post> findPostsByOwnerInOrOwner(Pageable pageable, List<AppUser> followedUsers, AppUser owner);
 }

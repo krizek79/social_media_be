@@ -70,6 +70,20 @@ public class PostController {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("/followed")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public List<PostResponse> getPostsOfFollowedUsers(
+        @ParameterObject Pageable pageable
+    ) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername() + ": GET - getPostsOfFollowedUsers"
+        );
+        return postService.getPostsOfFollowedUsers(pageable).getContent()
+            .stream()
+            .map(PostResponse::new)
+            .collect(Collectors.toList());
+    }
+
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public PostResponse updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest request) {
