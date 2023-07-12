@@ -60,6 +60,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post createPost(PostCreationRequest request) {
         AppUser appUser = appUserService.getCurrentAppUser();
+
         if (request.body() == null || request.body().isEmpty()) {
             throw new UnsatisfyingParameterException("Body cannot be empty");
         }

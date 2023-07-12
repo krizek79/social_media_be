@@ -1,6 +1,7 @@
 package com.krizan.social_media.controller;
 
 import com.krizan.social_media.controller.response.LikeResponse;
+import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.LikeService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class LikeController {
 
     private final LikeService likeService;
     private final AppUserService appUserService;
+    private final Mapper mapper;
 
     @PostMapping("/post/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -28,7 +30,7 @@ public class LikeController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": POST - likePost (id: " + id + ")"
         );
-        return new LikeResponse(likeService.likePost(id));
+        return mapper.mapLikeToResponse(likeService.likePost(id));
     }
 
     @PostMapping("/comment/{id}")
@@ -38,7 +40,7 @@ public class LikeController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": GET - likeComment (id: " + id + ")"
         );
-        return new LikeResponse(likeService.likeComment(id));
+        return mapper.mapLikeToResponse(likeService.likeComment(id));
     }
 
     @DeleteMapping("/post/{id}")
@@ -48,7 +50,7 @@ public class LikeController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": GET - unlikePost (id: " + id + ")"
         );
-        return new LikeResponse(likeService.unlikePost(id));
+        return mapper.mapLikeToResponse(likeService.unlikePost(id));
     }
 
     @DeleteMapping("/comment/{id}")
@@ -58,6 +60,6 @@ public class LikeController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": GET - unlikeComment (id: " + id + ")"
         );
-        return new LikeResponse(likeService.unlikeComment(id));
+        return mapper.mapLikeToResponse(likeService.unlikeComment(id));
     }
 }

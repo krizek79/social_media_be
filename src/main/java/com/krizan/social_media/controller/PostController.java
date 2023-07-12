@@ -3,6 +3,7 @@ package com.krizan.social_media.controller;
 import com.krizan.social_media.controller.request.PostCreationRequest;
 import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.controller.response.PostResponse;
+import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.PostService;
 import java.util.List;
@@ -31,6 +32,7 @@ public class PostController {
 
     private final PostService postService;
     private final AppUserService appUserService;
+    private final Mapper mapper;
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -39,7 +41,7 @@ public class PostController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": GET - getPostById (id: " + id + ")"
         );
-        return new PostResponse(postService.getPostById(id));
+        return mapper.mapPostToResponse(postService.getPostById(id));
     }
 
     @GetMapping
@@ -50,7 +52,7 @@ public class PostController {
         log.info(appUserService.getCurrentAppUser().getUsername() + ": GET - getAllPosts");
         return postService.getAllPosts(pageable).getContent()
             .stream()
-            .map(PostResponse::new)
+            .map(mapper::mapPostToResponse)
             .collect(Collectors.toList());
     }
 
@@ -66,7 +68,7 @@ public class PostController {
         );
         return postService.getAllPostsByUsername(pageable, username).getContent()
             .stream()
-            .map(PostResponse::new)
+            .map(mapper::mapPostToResponse)
             .collect(Collectors.toList());
     }
 
@@ -80,7 +82,7 @@ public class PostController {
         );
         return postService.getPostsOfFollowedUsers(pageable).getContent()
             .stream()
-            .map(PostResponse::new)
+            .map(mapper::mapPostToResponse)
             .collect(Collectors.toList());
     }
 
@@ -90,7 +92,7 @@ public class PostController {
         log.info(appUserService.getCurrentAppUser().getUsername()
             + ": PATCH - updatePost (id: " + id + ")"
         );
-        return new PostResponse(postService.updatePost(id, request));
+        return mapper.mapPostToResponse(postService.updatePost(id, request));
     }
 
     @PostMapping
@@ -98,7 +100,7 @@ public class PostController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public PostResponse createPost(@RequestBody PostCreationRequest request) {
         log.info(appUserService.getCurrentAppUser().getUsername() + ": POST - createPost");
-        return new PostResponse(postService.createPost(request));
+        return mapper.mapPostToResponse(postService.createPost(request));
     }
 
     @DeleteMapping("/{id}")

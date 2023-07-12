@@ -3,10 +3,10 @@ package com.krizan.social_media.service.impl;
 import com.krizan.social_media.controller.exception.UnauthorizedException;
 import com.krizan.social_media.controller.request.LoginRequest;
 import com.krizan.social_media.controller.request.RegistrationRequest;
-import com.krizan.social_media.controller.response.AppUserResponse;
 import com.krizan.social_media.controller.response.AuthResponse;
 import com.krizan.social_media.model.AppUser;
 import com.krizan.social_media.model.Role;
+import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.AuthService;
 import com.krizan.social_media.service.api.JwtService;
@@ -27,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final AppUserService appUserService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final Mapper mapper;
 
     @Override
     public void register(RegistrationRequest request) {
@@ -54,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
                     .plusMillis(jwtService.getJwtExpirationTimeInMillis())
                     .toString()
             )
-            .user(new AppUserResponse(principal))
+            .user(mapper.mapAppUserToResponse(principal))
             .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.krizan.social_media.controller;
 
 import com.krizan.social_media.controller.response.FollowResponse;
+import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.FollowService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class FollowController {
 
     private final FollowService followService;
     private final AppUserService appUserService;
+    private final Mapper mapper;
 
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -28,7 +30,7 @@ public class FollowController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": POST - follow (id: " + id + ")"
         );
-        return new FollowResponse(followService.follow(id));
+        return mapper.mapFollowToResponse(followService.follow(id));
     }
 
     @DeleteMapping("/{id}")
@@ -38,6 +40,6 @@ public class FollowController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": POST - unfollow (id: " + id + ")"
         );
-        return new FollowResponse(followService.unfollow(id));
+        return mapper.mapFollowToResponse(followService.unfollow(id));
     }
 }

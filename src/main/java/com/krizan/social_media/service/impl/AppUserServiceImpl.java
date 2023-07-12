@@ -50,9 +50,18 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getCurrentAppUser() {
-        Jwt principal =
-            (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return getAppUserByUsername(principal.getSubject());
+//        Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return getAppUserByUsername(principal.getSubject());
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof Jwt) {
+            username = ((Jwt) principal).getSubject();
+        }
+        if (principal instanceof User) {
+            username = ((User) principal).getUsername();
+        }
+        return getAppUserByUsername(username);
     }
 
     @Override

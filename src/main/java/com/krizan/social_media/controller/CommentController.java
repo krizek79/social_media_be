@@ -3,6 +3,7 @@ package com.krizan.social_media.controller;
 import com.krizan.social_media.controller.request.CreateCommentRequest;
 import com.krizan.social_media.controller.request.UpdateCommentRequest;
 import com.krizan.social_media.controller.response.CommentResponse;
+import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.CommentService;
 import java.util.List;
@@ -27,6 +28,7 @@ public class CommentController {
 
     private final CommentService commentService;
     private final AppUserService appUserService;
+    private final Mapper mapper;
 
     @GetMapping("/post/{postId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -37,7 +39,7 @@ public class CommentController {
         );
         return commentService.getAllCommentsByPostId(postId)
             .stream()
-            .map(CommentResponse::new)
+            .map(mapper::mapCommentToResponse)
             .collect(Collectors.toList());
     }
 
@@ -48,7 +50,7 @@ public class CommentController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": GET - getCommentById (id: " + id + ")"
         );
-        return new CommentResponse(commentService.getCommentById(id));
+        return mapper.mapCommentToResponse(commentService.getCommentById(id));
     }
 
     @PostMapping
@@ -58,7 +60,7 @@ public class CommentController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": POST - createComment"
         );
-        return new CommentResponse(commentService.createComment(request));
+        return mapper.mapCommentToResponse(commentService.createComment(request));
     }
 
     @PatchMapping("/{id}")
@@ -71,7 +73,7 @@ public class CommentController {
             appUserService.getCurrentAppUser().getUsername()
                 + ": PATCH - updateComment (id: " + id + ")"
         );
-        return new CommentResponse(commentService.updateComment(id, request));
+        return mapper.mapCommentToResponse(commentService.updateComment(id, request));
     }
 
     @DeleteMapping("/{id}")

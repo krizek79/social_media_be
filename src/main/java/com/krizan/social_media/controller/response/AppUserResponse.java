@@ -1,36 +1,18 @@
 package com.krizan.social_media.controller.response;
 
-import com.krizan.social_media.model.AppUser;
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.Getter;
+import lombok.Builder;
 
-@Getter
-public class AppUserResponse {
-
-    private final Long id;
-    private final String role;
-    private final String username;
-    private final String email;
-    private final String bio;
-    private final Integer numberOfPosts;
-    private final String avatarUrl;
-    private final List<FollowResponse> followers;
-    private final List<FollowResponse> following;
-
-    public AppUserResponse(AppUser appUser) {
-        this.id = appUser.getId();
-        this.role = appUser.getRole().name();
-        this.username = appUser.getUsername();
-        this.email = appUser.getEmail();
-        this.bio = appUser.getBio();
-        this.numberOfPosts = appUser.getPosts().size();
-        this.avatarUrl = appUser.getAvatarUrl();
-        this.followers = appUser.getFollowers().stream()
-            .map(FollowResponse::new)
-            .collect(Collectors.toList());
-        this.following = appUser.getFollowing().stream()
-            .map(FollowResponse::new)
-            .collect(Collectors.toList());
-    }
+@Builder
+public record AppUserResponse(
+    Long id,
+    String role,
+    String username,
+    String email,
+    String bio,
+    Integer numberOfPosts,
+    String avatarUrl,
+    Integer numberOfFollowers,
+    Integer numberOfFollowing,
+    Boolean followedByCurrentUser
+) {
 }
