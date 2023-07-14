@@ -50,7 +50,7 @@ public class AppUser implements UserDetails {
     private Role role;
     @NotNull
     private String password;
-    @OneToMany(orphanRemoval = true, mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "author", cascade = CascadeType.ALL)
     private List<Post> posts;
     @OneToMany(orphanRemoval = true, mappedBy = "author", cascade = CascadeType.ALL)
     private List<Comment> comments;

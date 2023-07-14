@@ -66,7 +66,7 @@ public class PostServiceImpl implements PostService {
         }
 
         Post post = Post.builder()
-            .owner(appUser)
+            .author(appUser)
             .body(request.body())
             .comments(new ArrayList<>())
             .likes(new ArrayList<>())
@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService {
     public Post updatePost(Long id, PostUpdateRequest request) {
         Post post = getPostById(id);
         AppUser appUser = appUserService.getCurrentAppUser();
-        if (appUser != post.getOwner() && !appUser.getRole().equals(Role.ADMIN)) {
+        if (appUser != post.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
             throw new ForbiddenException("You don't have permission to update this post.");
         }
         if (request.body() != null && !request.body().isEmpty()) {
@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService {
     public void deletePost(Long id) {
         Post post = getPostById(id);
         AppUser appUser = appUserService.getCurrentAppUser();
-        if (appUser != post.getOwner() && !appUser.getRole().equals(Role.ADMIN)) {
+        if (appUser != post.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
             throw new ForbiddenException("You don't have permission to delete this post.");
         }
         postRepository.delete(post);

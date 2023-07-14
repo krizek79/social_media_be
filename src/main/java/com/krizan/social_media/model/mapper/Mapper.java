@@ -40,7 +40,7 @@ public class Mapper {
     public PostResponse mapPostToResponse(Post post) {
         return PostResponse.builder()
             .id(post.getId())
-            .author(mapAppUserToResponse(post.getOwner()))
+            .author(mapAppUserToResponse(post.getAuthor()))
             .createdAt(post.getCreatedAt())
             .body(post.getBody())
             .numberOfLikes(post.getLikes().size())

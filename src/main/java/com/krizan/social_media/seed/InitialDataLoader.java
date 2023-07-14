@@ -73,7 +73,7 @@ public class InitialDataLoader implements CommandLineRunner {
         List<Post> posts = new ArrayList<>();
 
         Post post1 = Post.builder()
-            .owner(admin)
+            .author(admin)
             .body("My wife said I should do lunges to stay in shape. "
                 + "That would be a big step forward."
             )
@@ -84,7 +84,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post1);
 
         Post post2 = Post.builder()
-            .owner(admin)
+            .author(admin)
             .body("Why do seagulls fly over the ocean? Because if they flew over the bay, "
                 + "we'd call them bagels."
             )
@@ -95,7 +95,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post2);
 
         Post post3 = Post.builder()
-            .owner(admin)
+            .author(admin)
             .body("A skeleton walks into a bar and says, 'Hey, bartender. "
                 + "I'll have one beer and a mop."
             )
@@ -106,7 +106,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post3);
 
         Post post4 = Post.builder()
-            .owner(admin)
+            .author(admin)
             .body("My wife is really mad at the fact that I have no sense of direction. "
                 + "So I packed up my stuff and right!"
             )
@@ -122,7 +122,7 @@ public class InitialDataLoader implements CommandLineRunner {
             .orElseThrow(() -> new NotFoundException("User not found"));
 
         Post post5 = Post.builder()
-            .owner(user1)
+            .author(user1)
             .body("What did the snail who was riding on the turtle's back say? Wheeeee!")
             .comments(new ArrayList<>())
             .likes(new ArrayList<>())
@@ -131,7 +131,7 @@ public class InitialDataLoader implements CommandLineRunner {
         posts.add(post5);
 
         Post post6 = Post.builder()
-            .owner(user1)
+            .author(user1)
             .body("What does a pig put on dry skin? Oinkment.")
             .comments(new ArrayList<>())
             .likes(new ArrayList<>())

@@ -31,7 +31,7 @@ public class Post {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    private AppUser owner;
+    private AppUser author;
     @NotNull
     private String body;
     @CreationTimestamp
