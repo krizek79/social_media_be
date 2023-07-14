@@ -67,7 +67,10 @@ public class AppUserController {
         @ParameterObject Pageable pageable,
         @RequestParam(required = false) String username
     ) {
-        log.info(appUserService.getCurrentAppUser().getUsername() + ": GET - searchForAppUsersLikeUsername");
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": GET - searchForAppUsersLikeUsername"
+        );
         return appUserService.searchForAppUsersLikeUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)

@@ -50,9 +50,6 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getCurrentAppUser() {
-//        Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return getAppUserByUsername(principal.getSubject());
-
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = null;
         if (principal instanceof Jwt) {
@@ -150,10 +147,10 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser updateAppUser(Long id, UpdateAppUserRequest request) {
         AppUser appUser = getAppUserById(id);
 
-        if (request.username() != null) {
+        if (request.username() != null && !request.username().equals("")) {
             appUser.setUsername(request.username());
         }
-        if (request.email() != null) {
+        if (request.email() != null && !request.email().equals("")) {
             appUser.setEmail(request.email());
         }
         if (request.avatarUrl() != null) {
