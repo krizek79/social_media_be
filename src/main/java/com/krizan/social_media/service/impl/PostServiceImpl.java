@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<Post> getAllPostsByUsername(Pageable pageable, String username) {
         AppUser owner = appUserService.getAppUserByUsername(username);
-        return postRepository.findPostsByOwner(pageable, owner);
+        return postRepository.findPostsByAuthor(pageable, owner);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService {
         List<AppUser> users = followedUsers.stream()
             .map(Follow::getFollowed)
             .collect(Collectors.toList());
-        return postRepository.findPostsByOwnerInOrOwner(pageable, users, currentUser);
+        return postRepository.findPostsByAuthorInOrAuthor(pageable, users, currentUser);
     }
 
     @Override
