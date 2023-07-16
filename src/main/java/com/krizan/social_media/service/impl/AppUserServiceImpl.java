@@ -91,6 +91,12 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public Page<AppUser> getRandomUnfollowedAppUsers(Pageable pageable) {
+        Long currentUserId = getCurrentAppUser().getId();
+        return appUserRepository.getRandomUnfollowedAppUsers(pageable, currentUserId);
+    }
+
+    @Override
     public AppUser createAppUser(RegistrationRequest request, Role role) {
         if (request.email() == null)
             throw new UnsatisfyingParameterException("Email cannot be null");

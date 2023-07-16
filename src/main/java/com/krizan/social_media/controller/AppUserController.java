@@ -77,6 +77,19 @@ public class AppUserController {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("/random")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public List<AppUserResponse> getRandomUnfollowedAppUsers(@ParameterObject Pageable pageable) {
+        log.info(
+            appUserService.getCurrentAppUser().getUsername()
+                + ": GET - getRandomUnfollowedAppUsers"
+        );
+        return appUserService.getRandomUnfollowedAppUsers(pageable).getContent()
+            .stream()
+            .map(mapper::mapAppUserToResponse)
+            .collect(Collectors.toList());
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)

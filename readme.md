@@ -1,8 +1,8 @@
 # Social media API
 ## About
-Social media API with authentication and authorization of users,
-managing posts and writing comments. Authentication is implemented
-using JWT Bearer tokens.
+Backend of my Social media project.
+<br>
+Front end can be found [here](https://github.com/krizek79/social_media_fe).
 ## Used technologies
 - Spring Boot 3.0.0
 - Spring Security 3.0.0
