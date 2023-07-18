@@ -15,14 +15,14 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findAppUserByEmail(String email);
     Optional<AppUser> findAppUserByUsernameOrEmail(String username, String email);
     Page<AppUser> findAllByUsernameContainingIgnoreCase(Pageable pageable, String username);
-    @Query(value = """
-        SELECT * FROM app_user
-        WHERE id != :currentUserId
-        AND id NOT IN (
-            SELECT followed_id FROM follow
-            WHERE follower_id = :currentUserId
-        ) ORDER BY RAND()
-        """, nativeQuery = true
+    @Query(
+        """
+            SELECT u FROM AppUser u
+            WHERE u <> :currentUser AND u NOT IN
+                (SELECT f.followed FROM Follow f WHERE f.follower = :currentUser)
+            ORDER BY u.id
+        """
     )
-    Page<AppUser> getRandomUnfollowedAppUsers(Pageable pageable, Long currentUserId);
+    Page<AppUser> findAppUsersNotFollowedByUser(Pageable pageable, AppUser currentUser);
+
 }

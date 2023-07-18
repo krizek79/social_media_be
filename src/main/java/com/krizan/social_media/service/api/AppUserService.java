@@ -18,7 +18,7 @@ public interface AppUserService extends UserDetailsService {
     Optional<AppUser> getAppUserByUsernameOrEmail(String usernameOrEmail);
     List<AppUser> getAllAppUsers();
     Page<AppUser> searchForAppUsersLikeUsername(Pageable pageable, String username);
-    Page<AppUser> getRandomUnfollowedAppUsers(Pageable pageable);
+    Page<AppUser> getUnfollowedAppUsers(Pageable pageable);
     AppUser createAppUser(RegistrationRequest request, Role role);
     AppUser updateAppUser(Long id, UpdateAppUserRequest request);
     void deleteAppUser(Long id);

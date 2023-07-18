@@ -91,9 +91,9 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Page<AppUser> getRandomUnfollowedAppUsers(Pageable pageable) {
-        Long currentUserId = getCurrentAppUser().getId();
-        return appUserRepository.getRandomUnfollowedAppUsers(pageable, currentUserId);
+    public Page<AppUser> getUnfollowedAppUsers(Pageable pageable) {
+        AppUser currentUser = getCurrentAppUser();
+        return appUserRepository.findAppUsersNotFollowedByUser(pageable, currentUser);
     }
 
     @Override
