@@ -3,7 +3,6 @@ package com.krizan.social_media.service.impl;
 import com.krizan.social_media.model.AppUser;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.JwtService;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 @Slf4j
@@ -27,7 +28,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateTokenByAuthentication(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();
-        AppUser appUser = appUserService.getAppUserByUsername(principal.getUsername());
+        AppUser appUser = appUserService.getAppUserByEmail(principal.getUsername());
         return generateTokenByAppUser(appUser);
     }
 
@@ -37,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
             .issuer("self")
             .issuedAt(Instant.now())
             .expiresAt(Instant.now().plusMillis(jwtExpirationTimeInMillis))
-            .subject(appUser.getUsername())
+            .subject(appUser.getEmail())
             .claim("role", appUser.getRole())
             .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();

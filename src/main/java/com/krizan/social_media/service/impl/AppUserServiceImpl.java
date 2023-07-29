@@ -9,11 +9,6 @@ import com.krizan.social_media.model.AppUser;
 import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.service.api.AppUserService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +21,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,10 +36,10 @@ public class AppUserServiceImpl implements AppUserService {
     private final BCryptPasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = getAppUserByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser = getAppUserByEmail(email);
         return new User(
-            appUser.getUsername(),
+            appUser.getEmail(),
             appUser.getPassword(),
             appUser.isEnabled(),
             appUser.isAccountNonExpired(),
@@ -51,27 +52,34 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser getCurrentAppUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
+        String email = null;
         if (principal instanceof Jwt) {
-            username = ((Jwt) principal).getSubject();
+            email = ((Jwt) principal).getSubject();
         }
         if (principal instanceof User) {
-            username = ((User) principal).getUsername();
+            email = ((User) principal).getUsername();
         }
-        return getAppUserByUsername(username);
+        return getAppUserByEmail(email);
     }
 
     @Override
     public AppUser getAppUserById(Long id) {
         return appUserRepository.findById(id).orElseThrow(
-            () -> new NotFoundException("User not found")
+                () -> new NotFoundException("User not found")
         );
     }
 
     @Override
     public AppUser getAppUserByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(
-            () -> new NotFoundException("User not found")
+                () -> new NotFoundException("User not found")
+        );
+    }
+
+    @Override
+    public AppUser getAppUserByEmail(String email) {
+        return appUserRepository.findAppUserByEmail(email).orElseThrow(
+                () -> new NotFoundException("User not found")
         );
     }
 
@@ -94,6 +102,18 @@ public class AppUserServiceImpl implements AppUserService {
     public Page<AppUser> getUnfollowedAppUsers(Pageable pageable) {
         AppUser currentUser = getCurrentAppUser();
         return appUserRepository.findAppUsersNotFollowedByUser(pageable, currentUser);
+    }
+
+    @Override
+    public Page<AppUser> getFollowersByAppUser(Pageable pageable) {
+        AppUser currentUser = getCurrentAppUser();
+        return appUserRepository.findFollowersByFollowed(pageable, currentUser);
+    }
+
+    @Override
+    public Page<AppUser> getFollowedByAppUser(Pageable pageable) {
+        AppUser currentUser = getCurrentAppUser();
+        return appUserRepository.findFollowedByFollower(pageable, currentUser);
     }
 
     @Override
@@ -153,14 +173,14 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser updateAppUser(Long id, UpdateAppUserRequest request) {
         AppUser appUser = getAppUserById(id);
 
-        if (request.username() != null && !request.username().equals("")) {
-            appUser.setUsername(request.username());
-        }
-        if (request.email() != null && !request.email().equals("")) {
-            appUser.setEmail(request.email());
-        }
-        if (request.avatarUrl() != null) {
+        if (request.avatarUrl() != null && !request.avatarUrl().equals("")) {
             appUser.setAvatarUrl(request.avatarUrl());
+        } else {
+            appUser.setAvatarUrl(
+                "https://ui-avatars.com/api/?name="
+                + appUser.getUsername()
+                + "&background=random&size=256"
+            );
         }
         if (request.bio() != null) {
             appUser.setBio(request.bio());

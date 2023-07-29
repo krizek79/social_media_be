@@ -13,5 +13,9 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findPostsByAuthor(Pageable pageable, AppUser appUser);
-    Page<Post> findPostsByAuthorInOrAuthor(Pageable pageable, List<AppUser> followedUsers, AppUser owner);
+    Page<Post> findPostsByAuthorInOrAuthor(
+        Pageable pageable,
+        List<AppUser> followedUsers,
+        AppUser owner
+    );
 }

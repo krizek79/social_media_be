@@ -10,7 +10,6 @@ import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.AuthService;
 import com.krizan.social_media.service.api.JwtService;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Slf4j
 @Service
@@ -41,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(UnauthorizedException::new);
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                principal.getUsername(),
+                principal.getEmail(),
                 request.password()
             )
         );
