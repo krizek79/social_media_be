@@ -82,27 +82,33 @@ public class AppUserController {
             .collect(Collectors.toList());
     }
 
-    @GetMapping("/followers")
+    @GetMapping("/followers/{username}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public List<AppUserResponse> getFollowersByAppUser(@ParameterObject Pageable pageable) {
+    public List<AppUserResponse> getFollowersByUsername(
+        @ParameterObject Pageable pageable,
+        @PathVariable String username
+    ) {
         log.info(
             appUserService.getCurrentAppUser().getUsername()
-                + ": GET - getFollowersByAppUser"
+                + ": GET - getFollowersByUsername"
         );
-        return appUserService.getFollowersByAppUser(pageable).getContent()
+        return appUserService.getFollowersByUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
             .collect(Collectors.toList());
     }
 
-    @GetMapping("/following")
+    @GetMapping("/following/{username}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public List<AppUserResponse> getFollowedByAppUser(@ParameterObject Pageable pageable) {
+    public List<AppUserResponse> getFollowedByUsername(
+        @ParameterObject Pageable pageable,
+        @PathVariable String username
+    ) {
         log.info(
             appUserService.getCurrentAppUser().getUsername()
-                + ": GET - getFollowedByAppUser"
+                + ": GET - getFollowedByUsername"
         );
-        return appUserService.getFollowedByAppUser(pageable).getContent()
+        return appUserService.getFollowedByUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
             .collect(Collectors.toList());

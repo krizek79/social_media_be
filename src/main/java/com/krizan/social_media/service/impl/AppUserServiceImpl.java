@@ -105,15 +105,15 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Page<AppUser> getFollowersByAppUser(Pageable pageable) {
-        AppUser currentUser = getCurrentAppUser();
-        return appUserRepository.findFollowersByFollowed(pageable, currentUser);
+    public Page<AppUser> getFollowersByUsername(Pageable pageable, String username) {
+        AppUser appUser = getAppUserByUsername(username);
+        return appUserRepository.findFollowersByFollowed(pageable, appUser);
     }
 
     @Override
-    public Page<AppUser> getFollowedByAppUser(Pageable pageable) {
-        AppUser currentUser = getCurrentAppUser();
-        return appUserRepository.findFollowedByFollower(pageable, currentUser);
+    public Page<AppUser> getFollowedByUsername(Pageable pageable, String username) {
+        AppUser appUser = getAppUserByUsername(username);
+        return appUserRepository.findFollowedByFollower(pageable, appUser);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser updateAppUser(Long id, UpdateAppUserRequest request) {
         AppUser appUser = getAppUserById(id);
 
-        if (request.avatarUrl() != null && !request.avatarUrl().equals("")) {
+        if (request.avatarUrl() != null && !request.avatarUrl().isEmpty()) {
             appUser.setAvatarUrl(request.avatarUrl());
         } else {
             appUser.setAvatarUrl(
