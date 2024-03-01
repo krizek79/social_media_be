@@ -1,4 +1,4 @@
-package com.krizan.social_media.seed;
+package com.krizan.social_media.configuration;
 
 import com.krizan.social_media.controller.exception.NotFoundException;
 import com.krizan.social_media.model.AppUser;
@@ -7,27 +7,50 @@ import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.repository.PostRepository;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class InitialDataLoader implements CommandLineRunner {
+public class CustomCommandLineRunner implements CommandLineRunner {
 
     private final AppUserRepository appUserRepository;
     private final PostRepository postRepository;
     private final BCryptPasswordEncoder encoder;
 
+    @Value("${server.port}")
+    private String serverPort;
+    @Value("${springdoc.swagger-ui.path}")
+    private String swaggerPath;
+
+    @Value("${https.enabled}")
+    private Boolean httpsEnabled;
+
+    private static final String OPENAPI_MESSAGE = "Link to the OpenApi documentation: %s";
+
     @Override
     public void run(String... args) {
+        printOpenApiUrl();
         seedAppUserTable();
         seedPostTable();
+    }
+
+    private void printOpenApiUrl() {
+        String serverHost = InetAddress.getLoopbackAddress().getHostName();
+        String protocol = httpsEnabled ? "https" : "http";
+        String swaggerUrl = protocol + "://" + serverHost + ":" + serverPort + swaggerPath;
+        log.info(OPENAPI_MESSAGE.formatted(swaggerUrl));
     }
 
     private void seedAppUserTable() {

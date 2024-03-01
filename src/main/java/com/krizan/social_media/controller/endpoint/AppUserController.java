@@ -1,4 +1,4 @@
-package com.krizan.social_media.controller;
+package com.krizan.social_media.controller.endpoint;
 
 import com.krizan.social_media.controller.request.CreateAppUserRequest;
 import com.krizan.social_media.controller.request.UpdateAppUserRequest;
@@ -6,7 +6,6 @@ import com.krizan.social_media.controller.response.AppUserResponse;
 import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,66 +15,50 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
-@RequestMapping("/app-users")
+@RequestMapping("app-users")
 @RequiredArgsConstructor
 public class AppUserController {
 
     private final AppUserService appUserService;
     private final Mapper mapper;
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public AppUserResponse getAppUserById(@PathVariable("id") Long id) {
-        log.info(appUserService.getCurrentAppUser().getUsername()
-            + ": GET - getAppUserById (id: " + id + ")"
-        );
         return mapper.mapAppUserToResponse(appUserService.getAppUserById(id));
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping("username/{username}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public AppUserResponse getAppUserByUsername(@PathVariable String username) {
-        log.info(appUserService.getCurrentAppUser().getUsername()
-            + ": GET - getAppUserByUsername (username: " + username + ")"
-        );
         return mapper.mapAppUserToResponse(appUserService.getAppUserByUsername(username));
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<AppUserResponse> getAllAppUsers() {
-        log.info(appUserService.getCurrentAppUser().getUsername() + ": GET - getAllAppUsers");
         return appUserService.getAllAppUsers()
             .stream()
             .map(mapper::mapAppUserToResponse)
             .collect(Collectors.toList());
     }
 
-    @GetMapping("/search")
+    @GetMapping("search")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<AppUserResponse> searchForAppUsersLikeUsername(
         @ParameterObject Pageable pageable,
         @RequestParam(required = false) String username
     ) {
-        log.info(
-            appUserService.getCurrentAppUser().getUsername()
-                + ": GET - searchForAppUsersLikeUsername"
-        );
         return appUserService.searchForAppUsersLikeUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
             .collect(Collectors.toList());
     }
 
-    @GetMapping("/unfollowed")
+    @GetMapping("unfollowed")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<AppUserResponse> getUnfollowedAppUsers(@ParameterObject Pageable pageable) {
-        log.info(
-            appUserService.getCurrentAppUser().getUsername()
-                + ": GET - getRandomUnfollowedAppUsers"
-        );
         return appUserService.getUnfollowedAppUsers(pageable).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
@@ -88,26 +71,18 @@ public class AppUserController {
         @ParameterObject Pageable pageable,
         @PathVariable String username
     ) {
-        log.info(
-            appUserService.getCurrentAppUser().getUsername()
-                + ": GET - getFollowersByUsername"
-        );
         return appUserService.getFollowersByUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
             .collect(Collectors.toList());
     }
 
-    @GetMapping("/following/{username}")
+    @GetMapping("following/{username}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<AppUserResponse> getFollowedByUsername(
         @ParameterObject Pageable pageable,
         @PathVariable String username
     ) {
-        log.info(
-            appUserService.getCurrentAppUser().getUsername()
-                + ": GET - getFollowedByUsername"
-        );
         return appUserService.getFollowedByUsername(pageable, username).getContent()
             .stream()
             .map(mapper::mapAppUserToResponse)
@@ -118,26 +93,23 @@ public class AppUserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public AppUserResponse createAppUser(@RequestBody CreateAppUserRequest request) {
-        log.info(appUserService.getCurrentAppUser().getUsername() + ": POST - createAppUser");
         return mapper.mapAppUserToResponse(
             appUserService.createAppUser(request.registrationRequest(), request.role())
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public AppUserResponse updateAppUser(
         @PathVariable Long id,
         @RequestBody UpdateAppUserRequest request
     ) {
-        log.info(appUserService.getCurrentAppUser().getUsername() + ": PUT - updateAppUser");
         return mapper.mapAppUserToResponse(appUserService.updateAppUser(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteAppUser(@PathVariable("id") Long id) {
-        log.info(appUserService.getCurrentAppUser().getUsername() + ": DELETE - deleteAppUser");
         appUserService.deleteAppUser(id);
     }
 }
