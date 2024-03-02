@@ -5,6 +5,7 @@ import com.krizan.social_media.controller.request.UpdateAppUserRequest;
 import com.krizan.social_media.controller.response.AppUserResponse;
 import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.AppUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -92,7 +93,7 @@ public class AppUserController {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public AppUserResponse createAppUser(@RequestBody CreateAppUserRequest request) {
+    public AppUserResponse createAppUser(@Valid @RequestBody CreateAppUserRequest request) {
         return mapper.mapAppUserToResponse(
             appUserService.createAppUser(request.registrationRequest(), request.role())
         );
@@ -102,7 +103,7 @@ public class AppUserController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public AppUserResponse updateAppUser(
         @PathVariable Long id,
-        @RequestBody UpdateAppUserRequest request
+        @Valid @RequestBody UpdateAppUserRequest request
     ) {
         return mapper.mapAppUserToResponse(appUserService.updateAppUser(id, request));
     }

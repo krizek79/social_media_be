@@ -5,6 +5,7 @@ import com.krizan.social_media.controller.request.UpdateCommentRequest;
 import com.krizan.social_media.controller.response.CommentResponse;
 import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class CommentController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public CommentResponse createComment(@RequestBody CreateCommentRequest request) {
+    public CommentResponse createComment(@Valid @RequestBody CreateCommentRequest request) {
         return mapper.mapCommentToResponse(commentService.createComment(request));
     }
 
@@ -45,7 +46,7 @@ public class CommentController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public CommentResponse updateComment(
         @PathVariable("id") Long id,
-        @RequestBody UpdateCommentRequest request
+        @Valid @RequestBody UpdateCommentRequest request
     ) {
         return mapper.mapCommentToResponse(commentService.updateComment(id, request));
     }

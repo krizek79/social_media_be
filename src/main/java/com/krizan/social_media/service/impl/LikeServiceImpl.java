@@ -11,9 +11,10 @@ import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.CommentService;
 import com.krizan.social_media.service.api.LikeService;
 import com.krizan.social_media.service.api.PostService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -78,8 +79,7 @@ public class LikeServiceImpl implements LikeService {
             currentUser
         ).orElseThrow(() -> new NotFoundException(
             "Like from user: " + currentUser.getEmail()
-                + " on post with id: " + id + " does not exist...")
-        );
+                + " on post with id: " + id + " does not exist..."));
 
         likeRepository.delete(likeByPostIdAndAppUser);
 
@@ -94,8 +94,7 @@ public class LikeServiceImpl implements LikeService {
             currentUser
         ).orElseThrow(() -> new NotFoundException(
             "Like from user: " + currentUser.getEmail()
-                + " on comment with id: " + id + " does not exist...")
-        );
+                + " on comment with id: " + id + " does not exist..."));
 
         likeRepository.delete(likeByCommentIdAndAppUser);
 

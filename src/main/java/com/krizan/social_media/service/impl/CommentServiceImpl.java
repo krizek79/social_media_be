@@ -2,7 +2,6 @@ package com.krizan.social_media.service.impl;
 
 import com.krizan.social_media.controller.exception.ForbiddenException;
 import com.krizan.social_media.controller.exception.NotFoundException;
-import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.CreateCommentRequest;
 import com.krizan.social_media.controller.request.UpdateCommentRequest;
 import com.krizan.social_media.model.AppUser;
@@ -28,6 +27,9 @@ public class CommentServiceImpl implements CommentService {
     private final AppUserService appUserService;
     private final PostService postService;
 
+    private final String ERROR_PERMISSION = "You don't have permission to modify this comment.";
+    private final String ERROR_NOT_FOUND = "Comment with id: %s does not exist...";
+
     @Override
     public List<Comment> getAllCommentsByPostId(Long postId) {
         Post post = postService.getPostById(postId);
@@ -37,17 +39,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment getCommentById(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
-            () -> new NotFoundException("Comment with id: " + commentId + " does not exist...")
+            () -> new NotFoundException(ERROR_NOT_FOUND.formatted(commentId))
         );
     }
 
     @Override
     public Comment createComment(CreateCommentRequest request) {
         AppUser author = appUserService.getCurrentAppUser();
-
-        if (request.body() == null || request.body().isEmpty() || request.postId() == null) {
-            throw new UnsatisfyingParameterException("Body cannot be empty");
-        }
 
         Post post = postService.getPostById(request.postId());
         Comment parentComment;
@@ -77,11 +75,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentById(commentId);
         AppUser appUser = appUserService.getCurrentAppUser();
         if (appUser != comment.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
-            throw new ForbiddenException("You don't have permission to delete this post.");
-        }
-
-        if (request.body() == null || request.body().isEmpty()) {
-            throw new UnsatisfyingParameterException("Body cannot be null...");
+            throw new ForbiddenException(ERROR_PERMISSION);
         }
 
         comment.setBody(request.body());
@@ -94,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentById(commentId);
         AppUser appUser = appUserService.getCurrentAppUser();
         if (appUser != comment.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
-            throw new ForbiddenException("You don't have permission to delete this post.");
+            throw new ForbiddenException(ERROR_PERMISSION);
         }
         commentRepository.delete(comment);
     }

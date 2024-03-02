@@ -1,6 +1,9 @@
 package com.krizan.social_media.controller.request;
 
-public record UpdateCommentRequest(
-    String body
+import jakarta.validation.constraints.NotEmpty;
+
+public record UpdateCommentRequest(@NotEmpty(
+        message = "Body is mandatory.")
+        String body
 ) {
 }
