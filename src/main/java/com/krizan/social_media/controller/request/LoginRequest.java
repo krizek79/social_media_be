@@ -1,7 +1,10 @@
 package com.krizan.social_media.controller.request;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public record LoginRequest(
-    String usernameOrEmail,
-    String password
+        @NotEmpty(message = "Username/email is mandatory.")
+        String usernameOrEmail,
+        String password
 ) {
 }

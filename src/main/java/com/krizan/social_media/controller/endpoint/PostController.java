@@ -5,6 +5,7 @@ import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.controller.response.PostResponse;
 import com.krizan.social_media.model.mapper.Mapper;
 import com.krizan.social_media.service.api.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -65,14 +66,14 @@ public class PostController {
 
     @PatchMapping("{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public PostResponse updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest request) {
+    public PostResponse updatePost(@PathVariable Long id, @Valid @RequestBody PostUpdateRequest request) {
         return mapper.mapPostToResponse(postService.updatePost(id, request));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public PostResponse createPost(@RequestBody PostCreationRequest request) {
+    public PostResponse createPost(@Valid @RequestBody PostCreationRequest request) {
         return mapper.mapPostToResponse(postService.createPost(request));
     }
 

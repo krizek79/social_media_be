@@ -2,7 +2,6 @@ package com.krizan.social_media.service.impl;
 
 import com.krizan.social_media.controller.exception.ForbiddenException;
 import com.krizan.social_media.controller.exception.NotFoundException;
-import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.PostCreationRequest;
 import com.krizan.social_media.controller.request.PostUpdateRequest;
 import com.krizan.social_media.model.AppUser;
@@ -29,6 +28,9 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final AppUserService appUserService;
 
+    private final String ERROR_PERMISSION = "You don't have permission to modify this post.";
+    private final String ERROR_NOT_FOUND = "Post with id: %s does not exist...";
+
     @Override
     public Page<Post> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable);
@@ -52,17 +54,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostById(Long id) {
-        return postRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Post with id: " + id + " does not exist"));
+        return postRepository.findById(id).orElseThrow(() -> new NotFoundException(ERROR_NOT_FOUND.formatted(id)));
     }
 
     @Override
     public Post createPost(PostCreationRequest request) {
         AppUser appUser = appUserService.getCurrentAppUser();
-
-        if (request.body() == null || request.body().isEmpty()) {
-            throw new UnsatisfyingParameterException("Body cannot be empty");
-        }
 
         Post post = Post.builder()
             .author(appUser)
@@ -79,11 +76,10 @@ public class PostServiceImpl implements PostService {
         Post post = getPostById(id);
         AppUser appUser = appUserService.getCurrentAppUser();
         if (appUser != post.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
-            throw new ForbiddenException("You don't have permission to update this post.");
+            throw new ForbiddenException(ERROR_PERMISSION);
         }
-        if (request.body() != null && !request.body().isEmpty()) {
-            post.setBody(request.body());
-        }
+
+        post.setBody(request.body());
 
         return postRepository.save(post);
     }
@@ -93,7 +89,7 @@ public class PostServiceImpl implements PostService {
         Post post = getPostById(id);
         AppUser appUser = appUserService.getCurrentAppUser();
         if (appUser != post.getAuthor() && !appUser.getRole().equals(Role.ADMIN)) {
-            throw new ForbiddenException("You don't have permission to delete this post.");
+            throw new ForbiddenException(ERROR_PERMISSION);
         }
         postRepository.delete(post);
     }

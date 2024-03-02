@@ -2,7 +2,6 @@ package com.krizan.social_media.service.impl;
 
 import com.krizan.social_media.controller.exception.IllegalOperationException;
 import com.krizan.social_media.controller.exception.NotFoundException;
-import com.krizan.social_media.controller.exception.UnsatisfyingParameterException;
 import com.krizan.social_media.controller.request.RegistrationRequest;
 import com.krizan.social_media.controller.request.UpdateAppUserRequest;
 import com.krizan.social_media.model.AppUser;
@@ -23,8 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -33,6 +30,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder encoder;
+
+    private final String ERROR_NOT_FOUND = "User not found...";
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -63,23 +62,17 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getAppUserById(Long id) {
-        return appUserRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("User not found")
-        );
+        return appUserRepository.findById(id).orElseThrow(() -> new NotFoundException(ERROR_NOT_FOUND));
     }
 
     @Override
     public AppUser getAppUserByUsername(String username) {
-        return appUserRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("User not found")
-        );
+        return appUserRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(ERROR_NOT_FOUND));
     }
 
     @Override
     public AppUser getAppUserByEmail(String email) {
-        return appUserRepository.findAppUserByEmail(email).orElseThrow(
-                () -> new NotFoundException("User not found")
-        );
+        return appUserRepository.findAppUserByEmail(email).orElseThrow(() -> new NotFoundException(ERROR_NOT_FOUND));
     }
 
     @Override
@@ -117,34 +110,16 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser createAppUser(RegistrationRequest request, Role role) {
-        if (request.email() == null)
-            throw new UnsatisfyingParameterException("Email cannot be null");
-        if (!validateEmail(request.email()))
-            throw new UnsatisfyingParameterException("Email is not valid");
-        if (request.email().isEmpty())
-            throw new UnsatisfyingParameterException("Email cannot be empty");
-
         Optional<AppUser> appUserByEmail = appUserRepository.findAppUserByEmail(request.email());
         if (appUserByEmail.isPresent()) {
-            throw new IllegalOperationException("User with this username or email already exists");
+            String ERROR_USERNAME_OR_EMAIL_TAKEN = "User with this username or email already exists";
+            throw new IllegalOperationException(ERROR_USERNAME_OR_EMAIL_TAKEN);
         }
-
-        if (request.username() == null)
-            throw new UnsatisfyingParameterException("Username cannot be null");
-        if (request.username().isEmpty())
-            throw new UnsatisfyingParameterException("Username cannot be empty");
 
         Optional<AppUser> appUserByUsername = appUserRepository.findByUsername(request.username());
         if (appUserByUsername.isPresent()) {
             throw new IllegalOperationException("This username is already taken");
         }
-
-        if (request.password() == null)
-            throw new UnsatisfyingParameterException("Password cannot be null");
-        if (request.password().isEmpty())
-            throw new UnsatisfyingParameterException("Password cannot be empty");
-        if (!request.password().equals(request.matchingPassword()))
-            throw new UnsatisfyingParameterException("Passwords do not match");
 
         AppUser appUser = AppUser.builder()
             .email(request.email())
@@ -187,12 +162,5 @@ public class AppUserServiceImpl implements AppUserService {
     public void deleteAppUser(Long id) {
         AppUser appUser = getAppUserById(id);
         appUserRepository.delete(appUser);
-    }
-
-    private Boolean validateEmail(String email) {
-        String regex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

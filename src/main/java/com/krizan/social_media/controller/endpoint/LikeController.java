@@ -2,11 +2,14 @@ package com.krizan.social_media.controller.endpoint;
 
 import com.krizan.social_media.controller.response.LikeResponse;
 import com.krizan.social_media.model.mapper.Mapper;
-import com.krizan.social_media.service.api.AppUserService;
 import com.krizan.social_media.service.api.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
-    private final AppUserService appUserService;
     private final Mapper mapper;
 
     @PostMapping("post/{id}")
