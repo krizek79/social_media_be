@@ -9,35 +9,46 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.CreationTimestamp;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 @Getter
 @Setter
-@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldNameConstants
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
     private AppUser author;
+
     @NotNull
     private String body;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+
+    @Builder.Default
+    @OneToMany(mappedBy = Comment.Fields.post, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = Like.Fields.post, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 }

@@ -8,37 +8,52 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.CreationTimestamp;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 @Getter
 @Setter
-@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldNameConstants
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private AppUser author;
+
     @ManyToOne
     private Comment parentComment;
+
     private String body;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "parentComment")
-    private List<Comment> childComments;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "comment")
-    private List<Like> likes;
+
+    @Builder.Default
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = Fields.parentComment)
+    private List<Comment> childComments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = Like.Fields.comment)
+    private List<Like> likes = new ArrayList<>();
 }

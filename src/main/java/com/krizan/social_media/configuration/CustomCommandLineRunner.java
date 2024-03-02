@@ -6,7 +6,6 @@ import com.krizan.social_media.model.Post;
 import com.krizan.social_media.model.Role;
 import com.krizan.social_media.repository.AppUserRepository;
 import com.krizan.social_media.repository.PostRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,6 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Transactional
 @RequiredArgsConstructor
 public class CustomCommandLineRunner implements CommandLineRunner {
 
@@ -36,6 +34,8 @@ public class CustomCommandLineRunner implements CommandLineRunner {
 
     @Value("${https.enabled}")
     private Boolean httpsEnabled;
+
+    private static final String ERROR_USER_NOT_FOUND = "User not found";
 
     private static final String OPENAPI_MESSAGE = "Link to the OpenApi documentation: %s";
 
@@ -60,11 +60,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
             .password(encoder.encode("admin"))
             .avatarUrl("https://ui-avatars.com/api/?name=admin&background=random&size=256")
             .bio("👑")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.ADMIN)
             .enabled(true)
             .locked(false)
@@ -77,11 +72,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
             .password(encoder.encode("pass"))
             .bio("We Choose Truth Over Facts! 🤑")
             .avatarUrl("https://ui-avatars.com/api/?name=Matej%20Križan&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -102,11 +92,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
             .avatarUrl(
                 "https://ui-avatars.com/api/?name=Gregor%20Nehehe&background=random&size=256"
             )
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -126,11 +111,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
             .avatarUrl(
                 "https://ui-avatars.com/api/?name=Suzan%20Rodriguez&background=random&size=256"
             )
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -149,11 +129,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                 """
             )
             .avatarUrl("https://ui-avatars.com/api/?name=Michael%20Sort&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -172,11 +147,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                 """
             )
             .avatarUrl("https://ui-avatars.com/api/?name=Emily%20Blunt&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -195,11 +165,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                 """
             )
             .avatarUrl("https://ui-avatars.com/api/?name=Liam%20Johnson&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -218,11 +183,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                 """
             )
             .avatarUrl("https://ui-avatars.com/api/?name=Noah%20Ramirez&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -243,11 +203,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                 """
             )
             .avatarUrl("https://ui-avatars.com/api/?name=Chloe%20Lee&background=random&size=256")
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -270,11 +225,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
             .avatarUrl(
                 "https://ui-avatars.com/api/?name=Oliver%20Wilson&background=random&size=256"
             )
-            .posts(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .following(new ArrayList<>())
-            .followers(new ArrayList<>())
             .role(Role.USER)
             .enabled(true)
             .locked(false)
@@ -284,7 +234,7 @@ public class CustomCommandLineRunner implements CommandLineRunner {
 
     private void seedPostTable() {
         AppUser admin = appUserRepository.findAppUserByEmail("admin@admin.com")
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new NotFoundException(ERROR_USER_NOT_FOUND));
 
         List<Post> posts = new ArrayList<>();
 
@@ -296,8 +246,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     That would be a big step forward.
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post1);
@@ -310,8 +258,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     we'd call them bagels.
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post2);
@@ -324,8 +270,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     I'll have one beer and a mop.
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post3);
@@ -338,14 +282,12 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     So I packed up my stuff and right!
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post4);
 
         AppUser user1 = appUserRepository.findAppUserByEmail("krizan.matej79@gmail.com")
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new NotFoundException(ERROR_USER_NOT_FOUND));
 
         Post post5 = Post.builder()
             .author(user1)
@@ -354,8 +296,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     What did the snail who was riding on the turtle's back say? Wheeeee!
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post5);
@@ -367,14 +307,12 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     What does a pig put on dry skin? Oinkment.
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post6);
 
         AppUser user2 = appUserRepository.findAppUserByEmail("test1@test.com")
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new NotFoundException(ERROR_USER_NOT_FOUND));
 
         Post post7 = Post.builder()
             .author(user2)
@@ -384,8 +322,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     https://www.youtube.com/watch?v=ZWU56UybP8Q&list=RDMMZWU56UybP8Q&start_radio=1
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post7);
@@ -398,8 +334,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     and let's find the best one in town! 🍟
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post8);
@@ -413,14 +347,12 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     Tag a friend and spread the positivity! 🙏✨
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post9);
 
         AppUser user3 = appUserRepository.findAppUserByEmail("test2@test.com")
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new NotFoundException(ERROR_USER_NOT_FOUND));
 
         Post post10 = Post.builder()
             .author(user3)
@@ -430,14 +362,12 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     and let's celebrate the wonders of our world.
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post10);
 
         AppUser user4 = appUserRepository.findAppUserByEmail("test3@test.com")
-            .orElseThrow(() -> new NotFoundException("User not found"));
+            .orElseThrow(() -> new NotFoundException(ERROR_USER_NOT_FOUND));
 
         Post post11 = Post.builder()
             .author(user4)
@@ -447,8 +377,6 @@ public class CustomCommandLineRunner implements CommandLineRunner {
                     Share your go-to workout routine and inspire others to get moving! 💪
                 """
             )
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .createdAt(LocalDateTime.now())
             .build();
         posts.add(post11);
