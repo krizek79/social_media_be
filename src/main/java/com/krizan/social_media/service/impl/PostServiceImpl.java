@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,8 +67,6 @@ public class PostServiceImpl implements PostService {
         Post post = Post.builder()
             .author(appUser)
             .body(request.body())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
             .build();
 
         appUser.getPosts().add(post);
