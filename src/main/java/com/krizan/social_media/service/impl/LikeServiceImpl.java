@@ -79,7 +79,7 @@ public class LikeServiceImpl implements LikeService {
             currentUser
         ).orElseThrow(() -> new NotFoundException(
             "Like from user: " + currentUser.getEmail()
-                + " on post with id: " + id + " does not exist..."));
+                + " on post with id: " + id + " does not exist."));
 
         likeRepository.delete(likeByPostIdAndAppUser);
 
@@ -94,7 +94,7 @@ public class LikeServiceImpl implements LikeService {
             currentUser
         ).orElseThrow(() -> new NotFoundException(
             "Like from user: " + currentUser.getEmail()
-                + " on comment with id: " + id + " does not exist..."));
+                + " on comment with id: " + id + " does not exist."));
 
         likeRepository.delete(likeByCommentIdAndAppUser);
 

@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
 
     private final String ERROR_PERMISSION = "You don't have permission to modify this comment.";
-    private final String ERROR_NOT_FOUND = "Comment with id: %s does not exist...";
+    private final String ERROR_NOT_FOUND = "Comment with id: %s does not exist.";
 
     @Override
     public List<Comment> getAllCommentsByPostId(Long postId) {

@@ -29,7 +29,7 @@ public class PostServiceImpl implements PostService {
     private final AppUserService appUserService;
 
     private final String ERROR_PERMISSION = "You don't have permission to modify this post.";
-    private final String ERROR_NOT_FOUND = "Post with id: %s does not exist...";
+    private final String ERROR_NOT_FOUND = "Post with id: %s does not exist.";
 
     @Override
     public Page<Post> getAllPosts(Pageable pageable) {
